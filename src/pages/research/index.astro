@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allResearch = await getCollection('research');
+
+// Sort by date descending
+allResearch.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Group by tags
+const groupedResearch = allResearch.reduce((acc, post) => {
+  const tags = post.data.tags && post.data.tags.length > 0 ? post.data.tags : ['Uncategorized'];
+  tags.forEach(tag => {
+    if (!acc[tag]) {
+      acc[tag] = [];
+    }
+    acc[tag].push(post);
+  });
+  return acc;
+}, {} as Record<string, typeof allResearch>);
+
+// Sort topics alphabetically
+const topics = Object.keys(groupedResearch).sort();
+---
+
+<BaseLayout title="Research | Deepraj R" description="Essays and research on product, execution, and strategy.">
+  <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
+    <div class="mb-16 border-b border-gray-100 dark:border-gray-800 pb-12">
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-gray-100">Research Index</h1>
+      <p class="text-xl text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed">Categorized findings, essays, and operational insights on building robust cross-functional systems.</p>
+    </div>
+
+    <div class="space-y-24">
+      {topics.map(topic => (
+        <section>
+          <div class="mb-8 flex items-center gap-4">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">{topic}</h2>
+            <div class="h-px bg-gray-200 dark:bg-gray-800 flex-grow mt-2"></div>
+          </div>
+          <div class="space-y-0">
+            {groupedResearch[topic].map(post => (
+              <a href={`/research/${post.id}`} class="group block py-8 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors px-4 -mx-4 rounded-xl">
+                <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+                  <div class="max-w-3xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-black dark:group-hover:text-white mb-2 tracking-tight">{post.data.title}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 font-medium line-clamp-2 md:line-clamp-1 leading-relaxed">{post.data.hook}</p>
+                  </div>
+                  <div class="shrink-0 text-sm text-gray-400 dark:text-gray-500 font-mono font-bold tracking-widest uppercase mt-2 md:mt-0">
+                    {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

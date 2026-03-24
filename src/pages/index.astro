@@ -1,0 +1,208 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const workEntries = await getCollection('work');
+const researchEntries = await getCollection('research');
+const photographyEntries = await getCollection('photography');
+
+// Sort by date (descending)
+workEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+researchEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+photographyEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Get top entries
+const topWork = workEntries.slice(0, 4);
+const recentResearch = researchEntries.slice(0, 5);
+const recentPhotos = photographyEntries.slice(0, 4);
+
+const principles = [
+  "I guide teams to reduce ambiguity before execution.",
+  "I align stakeholders so the team can scale work.",
+  "I build systems that empower teams to execute.",
+  "I drive the team to prioritize outcomes over activity.",
+  "I bridge technical and business silos to unify the team."
+];
+---
+
+<BaseLayout title="Deepraj R | Product Manager">
+  
+  <!-- Hero Section -->
+  <section class="max-w-5xl mx-auto px-6 py-24 md:py-32 flex flex-col md:flex-row md:items-center gap-12 md:gap-16">
+    <div class="max-w-2xl flex-1">
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-brand-gray-900 dark:text-white leading-tight mb-6">
+        Helps you turn chaos into aligned execution.
+      </h1>
+      <p class="text-lg md:text-xl text-brand-gray-600 dark:text-gray-300 mb-10 leading-relaxed font-medium">
+        Product Manager guiding tech, marketing, and business teams to transform ambiguous problems into shipped outcomes.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 relative z-20">
+        <a href="#work" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-colors">
+          See Outcomes
+        </a>
+        <a href="/research" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
+          Read Insights
+        </a>
+      </div>
+    </div>
+    <div class="hidden md:block w-48 h-48 lg:w-64 lg:h-64 shrink-0 relative group">
+      <div class="absolute inset-0 bg-gray-200 rounded-full animate-pulse group-hover:hidden"></div>
+      <img src="/Deepraj.jpg" alt="Deepraj R" class="relative z-10 w-full h-full object-cover rounded-full shadow-sm grayscale hover:grayscale-0 transition-all duration-500" loading="eager" />
+    </div>
+  </section>
+
+  <!-- Credibility / Proof Strip -->
+  <section class="border-y border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 py-12">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+      <p class="text-sm font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
+        Product | Technology | Marketing | Research
+      </p>
+      <p class="text-lg font-medium text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+        Proven track record of coordinating cross-functional teams and delivering complex initiatives.
+      </p>
+    </div>
+  </section>
+
+  <!-- Endless Logo Runner -->
+  <!-- Endless Logo Runner -->
+  <!-- Endless Logo Runner -->
+  <div class="border-y border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30 py-12 w-full flex overflow-hidden group">
+    <div class="animate-marquee flex shrink-0 items-center justify-around gap-16 md:gap-24 translate-z-0 pr-16 md:pr-24">
+      <img src="/logos/Growth_Associates.webp" alt="Growth Associates" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 mix-blend-multiply dark:mix-blend-normal transition-all duration-300" />
+      <img src="/logos/UNICEF.png" alt="UNICEF" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/Wattle-White-Text-Logo.svg" alt="Wattle" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale brightness-0 dark:invert transition-all duration-300" />
+      <img src="/logos/beagle-blue.svg" alt="Beagle Security" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/eci-logo.svg" alt="ECI" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/foodo.svg" alt="Foodo" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/kerala-police-logo-dark.png" alt="Kerala Police" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/mulearn.webp" alt="mulearn" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/tinkerhub_logo.jpg" alt="TinkerHub" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 mix-blend-multiply dark:mix-blend-normal transition-all duration-300" />
+      <img src="/logos/uproot-security-dark.svg" alt="Uproot Security" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+    </div>
+    <div class="animate-marquee flex shrink-0 items-center justify-around gap-16 md:gap-24 translate-z-0 pr-16 md:pr-24" aria-hidden="true">
+      <img src="/logos/Growth_Associates.webp" alt="Growth Associates" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 mix-blend-multiply dark:mix-blend-normal transition-all duration-300" />
+      <img src="/logos/UNICEF.png" alt="UNICEF" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/Wattle-White-Text-Logo.svg" alt="Wattle" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale brightness-0 dark:invert transition-all duration-300" />
+      <img src="/logos/beagle-blue.svg" alt="Beagle Security" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/eci-logo.svg" alt="ECI" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/foodo.svg" alt="Foodo" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/kerala-police-logo-dark.png" alt="Kerala Police" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/mulearn.webp" alt="mulearn" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+      <img src="/logos/tinkerhub_logo.jpg" alt="TinkerHub" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 mix-blend-multiply dark:mix-blend-normal transition-all duration-300" />
+      <img src="/logos/uproot-security-dark.svg" alt="Uproot Security" class="h-10 w-28 md:h-12 md:w-36 object-contain shrink-0 opacity-50 hover:opacity-100 dark:opacity-80 dark:hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300" />
+    </div>
+  </div>
+
+  <!-- Selected Work -->
+  <section id="work" class="max-w-5xl mx-auto px-6 py-24 border-b border-gray-100 dark:border-gray-800">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <div>
+        <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-4">Signature Projects</h2>
+        <p class="text-gray-500 dark:text-gray-400 max-w-xl">Deep-dive case studies on deploying high-leverage systems to align engineering, product, and business goals.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {topWork.map((entry) => (
+        <a href={`/work/${entry.id}`} class="group block border border-gray-200 dark:border-gray-800 p-8 hover:border-black dark:hover:border-white transition-colors duration-200 flex flex-col h-full bg-white dark:bg-gray-900/50">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:underline underline-offset-4 decoration-2">{entry.data.title}</h3>
+          
+          <div class="mb-6 flex-grow space-y-4">
+            <div>
+              <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">The Problem</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{entry.data.problem}</p>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">The Outcome</p>
+              <p class="text-sm font-medium text-black dark:text-gray-200 line-clamp-2">{entry.data.outcome}</p>
+            </div>
+          </div>
+          
+          <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-sm font-bold">
+            <span class="text-black dark:text-white group-hover:translate-x-1 transition-transform">Read Case Study &rarr;</span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-12 flex justify-start">
+      <a href="/work" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
+        Browse All Work &rarr;
+      </a>
+    </div>
+  </section>
+
+  <!-- Brief About Section -->
+  <section id="about" class="max-w-7xl mx-auto px-6 py-24 md:py-32 border-b border-gray-100 dark:border-gray-800 overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-center">
+      
+      <div class="md:col-span-5 relative">
+        <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?auto=format&fit=crop&w=600&q=80" alt="Deepraj R" class="rounded-3xl w-full h-[350px] md:h-[450px] object-cover shadow-sm transition-transform duration-700 hover:scale-[1.02]" />
+        <div class="seasonal-aura absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-gray-200 to-transparent dark:from-gray-800 dark:to-transparent rounded-full blur-[80px] opacity-60 transition-colors duration-[2000ms]"></div>
+      </div>
+
+      <div class="md:col-span-7 space-y-6">
+        <h2 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4">
+          Hi, I'm Deepraj. <span class="seasonal-emoji">👋</span>
+        </h2>
+        <p class="seasonal-greeting hidden text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-6"></p>
+        <p class="text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+          I'm a Product Manager who sits squarely at the messy intersection of engineering logic, beautiful design, and user psychology.
+        </p>
+        <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-8">
+          My journey didn't start in a sterile boardroom. It started with tearing apart hardware and software and trying to figure out how complex systems were wired together. Over the years, I've evolved into untangling organizational friction and architecting products with empathy.
+        </p>
+        <div class="pt-4">
+          <a href="/about" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
+            Read My Full Story &rarr;
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Writing / Research -->
+  <section id="research" class="max-w-5xl mx-auto px-6 py-24 border-b border-gray-100 dark:border-gray-800">
+    <div class="mb-12">
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">Latest Insights</h2>
+      <p class="text-gray-500 dark:text-gray-400 max-w-xl">Notes on execution, product strategy, and operational leverage.</p>
+    </div>
+
+    <div class="space-y-0 border-t border-gray-200 dark:border-gray-800">
+      {recentResearch.map((post) => (
+        <a href={`/research/${post.id}`} class="group block py-8 border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors px-4 -mx-4">
+          <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+            <div class="max-w-3xl">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-black dark:group-hover:text-white mb-2">{post.data.title}</h3>
+              <p class="text-gray-600 dark:text-gray-400 font-medium">{post.data.hook}</p>
+            </div>
+            <div class="shrink-0 text-sm text-gray-400 dark:text-gray-500 font-mono">
+              {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-12 flex justify-start">
+      <a href="/research" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
+        Read All Insights &rarr;
+      </a>
+    </div>
+  </section>
+
+  <!-- Bottom CTA -->
+  <section id="contact" class="max-w-5xl mx-auto px-6 py-32 text-center">
+    <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-8 max-w-3xl mx-auto">
+      Dealing with unclear execution, cross-team friction, or messy product workflows?
+    </h2>
+    <p class="text-xl text-gray-500 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
+      Let's talk about diagnosing the problem and establishing leverage.
+    </p>
+    <a href="mailto:hello@deeprajr.com" class="inline-flex justify-center items-center px-8 py-4 border-2 border-black dark:border-white text-base font-bold tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-colors">
+      Let's Talk &rarr;
+    </a>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,97 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const researchEntries = await getCollection('research');
+  return researchEntries.map(entry => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`${entry.data.title} | Deepraj R`}>
+  <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+    
+    <div class="mb-16 text-center">
+      <a href="/research" class="text-sm font-bold tracking-widest uppercase text-gray-400 hover:text-black dark:hover:text-white mb-12 inline-block transition-colors">&larr; Back to Research</a>
+      
+      <div class="mb-6 flex justify-center gap-3">
+        {entry.data.categories?.map((cat) => (
+          <span class="text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest bg-gray-100 dark:bg-gray-800 px-3 py-1">{cat}</span>
+        ))}
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 mb-6 leading-tight max-w-2xl mx-auto">
+        {entry.data.title}
+      </h1>
+      
+      <p class="text-lg md:text-xl text-gray-500 dark:text-gray-300 font-medium max-w-2xl mx-auto">
+        {entry.data.hook}
+      </p>
+      
+      <div class="mt-10 text-sm font-mono text-gray-400 dark:text-gray-500">
+        {entry.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+      </div>
+    </div>
+
+    {entry.data.bannerImage && (
+      <div class="mb-16 -mx-6 md:-mx-12 rounded-none md:rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800">
+        <img 
+          src={entry.data.bannerImage} 
+          alt={`Banner for ${entry.data.title}`} 
+          class="w-full h-[40vh] md:h-[60vh] object-cover grayscale hover:grayscale-0 transition-all duration-700" 
+        />
+      </div>
+    )}
+
+    <div class="content-wrapper prose prose-gray max-w-none mx-auto">
+      <style is:global>
+        @reference "tailwindcss";
+        .content-wrapper h3 {
+          @apply text-2xl font-bold text-gray-900 mt-16 mb-6 tracking-tight;
+        }
+        .dark .content-wrapper h3 {
+          @apply text-gray-100;
+        }
+        .content-wrapper p {
+          @apply text-lg text-gray-700 leading-relaxed mb-8;
+        }
+        .dark .content-wrapper p {
+          @apply text-gray-300;
+        }
+        .content-wrapper ul {
+          @apply list-disc list-outside ml-5 mb-8 space-y-3 text-lg text-gray-700;
+        }
+        .dark .content-wrapper ul {
+          @apply text-gray-300;
+        }
+        .content-wrapper li {
+          @apply pl-2;
+        }
+        .content-wrapper strong {
+          @apply font-bold text-black;
+        }
+        .dark .content-wrapper strong {
+          @apply text-white;
+        }
+      </style>
+      <Content />
+    </div>
+
+    {entry.data.tags && (
+      <div class="mt-20 pt-8 border-t border-gray-100 dark:border-gray-800">
+        <div class="flex flex-wrap gap-2">
+          {entry.data.tags.map((tag) => (
+            <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest border border-gray-200 dark:border-gray-800 px-3 py-1">{tag}</span>
+          ))}
+        </div>
+      </div>
+    )}
+
+  </article>
+</BaseLayout>

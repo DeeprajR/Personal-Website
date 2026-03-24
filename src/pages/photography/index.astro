@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPhotography = await getCollection('photography');
+allPhotography.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Photography - Deepraj R" description="A collection of my recent photographs.">
+  <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
+    <header class="mb-16">
+      <a href="/hobbies" class="text-sm font-bold tracking-widest uppercase text-gray-400 hover:text-black dark:text-gray-500 dark:hover:text-white mb-12 inline-block transition-colors">&larr; Back to Hobbies</a>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-gray-100">
+        Through the Lens
+      </h1>
+      <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed">
+        A collection of moments and perspectives captured over time. 
+        Select any image to view it in full resolution.
+      </p>
+    </header>
+
+    <div class="columns-1 sm:columns-2 md:columns-3 gap-6 space-y-6">
+      {allPhotography.map((photo) => (
+        <a href={photo.data.image} target="_blank" rel="noopener noreferrer" class="block group relative overflow-hidden bg-gray-100 dark:bg-gray-800 break-inside-avoid shadow-sm hover:shadow-md transition-all duration-300">
+          <img 
+            src={photo.data.image} 
+            alt={photo.data.title}
+            class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
+            loading="lazy"
+          />
+          <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+            <h3 class="text-white font-medium">{photo.data.title}</h3>
+            <time class="text-white/70 text-sm mt-1 block">{photo.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</time>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

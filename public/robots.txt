@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Block dev/build artifacts
+Disallow: /_astro/
+Disallow: /node_modules/
+
+# Sitemap location
+Sitemap: https://deeprajr.com/sitemap-index.xml

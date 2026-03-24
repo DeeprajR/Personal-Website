@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));@theme {
+  --color-brand-black: #0com0000;
+  --color-brand-white: #ffffff;
+  --color-brand-gray-50: #f9fafb;
+  --color-brand-gray-100: #f3f4f6;
+  --color-brand-gray-200: #e5e7eb;
+  --color-brand-gray-800: #1f2937;
+  --color-brand-gray-900: #111827;
+  
+  --font-sans: "Inter", "Roboto", "Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif;
+
+  --animate-marquee: marquee 30s linear infinite;
+  
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-brand-white text-brand-black font-sans antialiased;
+  }
+}

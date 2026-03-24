@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const workEntries = await getCollection('work');
+workEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Work & Projects | Deepraj R" description="A collection of my case studies and published works.">
+  <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
+    <header class="mb-16">
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-gray-100">
+        Signature Projects
+      </h1>
+      <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed">
+        A collection of case studies, published articles, and operational deep dives from my time working with cross-functional teams.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {workEntries.map((entry) => {
+        const isExternal = !!entry.data.url;
+        const href = isExternal ? entry.data.url : `/work/${entry.id}`;
+
+        return (
+          <a href={href} 
+             target={isExternal ? "_blank" : "_self"}
+             rel={isExternal ? "noopener noreferrer" : ""}
+             class="group flex flex-col justify-between p-8 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 transition-all duration-300 min-h-[320px]">
+            
+            <div>
+              <div class="flex justify-between items-start mb-6">
+                <span class="text-xs font-bold text-gray-400 dark:text-gray-500 font-mono tracking-widest uppercase">
+                  {entry.data.date.getFullYear()}
+                </span>
+                {isExternal && (
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"></path>
+                    <path d="M11 13l9 -9"></path>
+                    <path d="M15 4h5v5"></path>
+                  </svg>
+                )}
+              </div>
+
+              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-black dark:group-hover:text-white leading-tight">
+                {entry.data.title}
+              </h2>
+              
+              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+                {entry.data.description}
+              </p>
+            </div>
+
+            {entry.data.tags && entry.data.tags.length > 0 && (
+              <div class="mt-8 flex flex-wrap gap-2">
+                {entry.data.tags.slice(0, 3).map(tag => (
+                  <span class="text-xs font-bold bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 uppercase tracking-widest px-2 py-1 border border-gray-200 dark:border-gray-700">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+            
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>

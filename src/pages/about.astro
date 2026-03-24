@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const experience = [
+  {
+    role: "AI Product Manager",
+    company: "Foodo AI",
+    period: "Jan 2026 - Present",
+    url: "https://foodo.ai",
+    description: "Currently leading product strategy and roadmap execution across 3 distinct AI-driven products tailored specifically for the Restaurant Technology industry. Fully focused on delivering scalable machine learning implementations that solve complex operational problems.",
+  },
+  {
+    role: "Associate Account Manager",
+    company: "Wattlecorp Cybersecurity Labs",
+    period: "Mar 2025 - Oct 2025",
+    url: "https://wattlecorp.com",
+    description: "Managed enterprise client relationships, ensuring seamless delivery of cutting-edge cybersecurity audits, vulnerability remediation, and architecture consulting.",
+  },
+  {
+    role: "Marketing Executive",
+    company: "Beagle Security",
+    period: "Apr 2022 - Mar 2023",
+    url: "https://beaglesecurity.com",
+    description: "Spearheaded growth marketing initiatives. Analyzed market trends to optimize product messaging, dramatically improving user acquisition and conversion funnels.",
+  },
+  {
+    role: "Content Writing Intern",
+    company: "Beagle Security",
+    period: "Nov 2021 - Apr 2022",
+    url: "https://beaglesecurity.com",
+    description: "Produced technical and marketing content centered on application security. Translated deeply technical vulnerability contexts into approachable product documentation.",
+  }
+];
+---
+
+<BaseLayout title="About | Deepraj R" description="My journey, operating principles, and professional experience.">
+  
+  <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
+    <!-- Header -->
+    <div class="mb-16">
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-gray-900 dark:text-gray-100">
+        Hello. I'm Deepraj. <span class="seasonal-emoji">👋</span>
+      </h1>
+      <p class="seasonal-greeting hidden text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-8"></p>
+      <p class="text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-medium max-w-3xl">
+        I'm a Product Manager who sits squarely at the messy intersection of engineering logic, beautiful design, and human psychology.
+      </p>
+    </div>
+
+    <!-- Photos Montage -->
+    <div class="relative mb-24">
+      <div class="grid grid-cols-2 gap-4 relative">
+        <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?auto=format&fit=crop&w=800&q=80" alt="Working out a problem" class="rounded-3xl w-full h-80 md:h-[450px] object-cover shadow-sm rotate-[-1deg] hover:rotate-0 transition-transform duration-500 hover:scale-[1.02]" />
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Brainstorming with team laying out structural problems" class="rounded-3xl w-full h-80 md:h-[450px] object-cover shadow-sm rotate-[1deg] hover:rotate-0 transition-transform duration-500 mt-12 md:mt-24 hover:scale-[1.02]" />
+      </div>
+      <!-- Decorative blur element behind images -->
+      <div class="seasonal-aura absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-gray-200 to-transparent dark:from-gray-800 dark:to-transparent rounded-full blur-[100px] opacity-70 transition-colors duration-[2000ms]"></div>
+    </div>
+
+    <!-- Narrative -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 mb-16 border-b border-gray-100 dark:border-gray-800 pb-16">
+      <div class="md:col-span-4">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">The Backstory</h2>
+      </div>
+      <div class="md:col-span-8 prose prose-lg text-gray-600 dark:text-gray-400">
+        <p class="mb-4">
+          My journey started in marketing and content, deeply immersed in learning how to communicate complex technical value in the rigorous space of application security. Over time, my fascination naturally evolved from simply marketing products into actively shaping how they are built and structured.
+        </p>
+        <p>
+          Today, I operate at the intersection of developers, growth, operations teams, and stakeholders.I specialize in untangling sophisticated user problems, architecting product roadmaps, and leading cross-functional teams to deliver solutions that are not only secure and scalable, but structurally intuitive for human beings to use.
+        </p>
+      </div>
+    </div>
+
+    <!-- Experience Timeline -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 mb-24">
+      <div class="md:col-span-4">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">Career Timeline</h2>
+      </div>
+      <div class="md:col-span-8">
+        <ul class="space-y-0">
+          {experience.map((job) => (
+            <li class="relative pl-8 md:pl-12 pb-16 last:pb-0 border-l border-gray-200 dark:border-gray-800 last:border-transparent">
+              <div class="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-gray-300 dark:bg-gray-600 ring-4 ring-white dark:ring-gray-950"></div>
+              
+              <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">{job.role}</h3>
+              <div class="flex flex-wrap items-center gap-3 text-sm font-bold tracking-widest uppercase mt-2 mb-4">
+                <a href={job.url} target="_blank" rel="noopener noreferrer" class="text-black hover:text-gray-500 dark:text-white dark:hover:text-gray-400 transition-colors">
+                  {job.company}
+                </a>
+                <span class="text-gray-300 dark:text-gray-600">&bull;</span>
+                <span class="text-gray-400 dark:text-gray-500 font-mono">{job.period}</span>
+              </div>
+              <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
+                {job.description}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Why connect block -->
+    <div class="bg-gray-50 dark:bg-gray-900/40 p-8 md:p-12 rounded-3xl border border-gray-100 dark:border-gray-800 mb-16">
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8">Let's work together</h3>
+      <ul class="space-y-6">
+        <li class="flex items-start gap-5">
+          <span class="text-3xl mt-1">☕</span>
+          <span class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed"><strong>Grab a coffee:</strong> I love chatting about hardware, edge computing, design systems, or obscure technical lore anywhere in the world.</span>
+        </li>
+        <li class="flex items-start gap-5">
+          <span class="text-3xl mt-1">🤝</span>
+          <span class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed"><strong>Collaborate:</strong> Always open to mentoring, bouncing ideas around for startup founders, or auditing complex product funnels.</span>
+        </li>
+        <li class="flex items-start gap-5">
+          <span class="text-3xl mt-1">🚀</span>
+          <span class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed text-balance">
+            <span class="font-bold text-black dark:text-white">Currently open to new roles.</span> If your team needs someone who can naturally bridge the gap between creative chaos and analytical spreadsheets, we should absolutely talk.
+          </span>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- CTA -->
+    <div class="flex flex-wrap gap-4 items-center mb-12">
+      <a href="mailto:hello@deeprajr.com" class="inline-flex justify-center items-center px-8 py-4 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all">
+        Get In Touch &rarr;
+      </a>
+      <a href="https://www.linkedin.com/in/deeprajr/" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center items-center px-8 py-4 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all">
+        Connect on LinkedIn
+      </a>
+    </div>
+
+  </div>
+</BaseLayout>

@@ -1,0 +1,297 @@
+---
+// pure client-side interactivity suite for seasonal animations (Indian Context)
+---
+<canvas id="seasonal-master-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 50;"></canvas>
+
+<script is:inline>
+  let canvas, ctx;
+  let particles = [];
+  let mouse = { x: -1000, y: -1000, radius: 120 };
+  let time = 0;
+  let currentAnimationId = null;
+  let activeConfig = null;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    canvas = document.getElementById('seasonal-master-canvas');
+    ctx = canvas.getContext('2d');
+
+    const updateSize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+
+    window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mouseout', () => { mouse.x = -1000; mouse.y = -1000; });
+
+    window.setSeason = function(forcedSeason = null) {
+      if (currentAnimationId) cancelAnimationFrame(currentAnimationId);
+
+      if (forcedSeason === 'pause') {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        localStorage.removeItem('preferred-season');
+        document.querySelectorAll('.seasonal-greeting').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.seasonal-emoji').forEach(el => el.textContent = '');
+        document.querySelectorAll('.seasonal-aura').forEach(aura => {
+          aura.className = aura.className.replace(/(from|dark:from)-[a-z]+-[0-9]+/g, '').replace(/\s+/g, ' ');
+        });
+        return;
+      }
+
+      let season = forcedSeason;
+      if (!season || season === 'auto') {
+        const m = new Date().getMonth();
+        if (m === 11 || m === 0 || m === 1) season = 'winter'; 
+        else if (m === 2 || m === 3) season = 'spring'; 
+        else if (m === 4 || m === 5) season = 'summer'; 
+        else if (m >= 6 && m <= 8) season = 'monsoon'; 
+        else season = 'festive'; 
+      }
+
+      if (forcedSeason) localStorage.setItem('preferred-season', forcedSeason);
+
+      const config = {
+        winter: { 
+          auraDark: 'dark:from-blue-900', auraLight: 'from-blue-200', emoji: '☕',
+          greeting: 'Sipping warm chai while architecting scalable products.', 
+          colors: ['#ffffff', '#e0f2fe', '#bae6fd'], particleType: 'winter-calm', count: 40 
+        },
+        spring: { 
+          auraDark: 'dark:from-lime-900', auraLight: 'from-yellow-200', emoji: '🪁',
+          greeting: 'Catching the spring breeze and shaping clear roadmaps.', 
+          colors: ['#facc15', '#fde047', '#bef264', '#a3e635'], particleType: 'spring-calm', count: 40 
+        },
+        summer: { 
+          auraDark: 'dark:from-orange-950', auraLight: 'from-amber-200', emoji: '🥭',
+          greeting: 'Beating the summer heat by building resilient products.', 
+          colors: ['#fbbf24', '#f59e0b', '#fcd34d'], particleType: 'summer-calm', count: 40 
+        },
+        monsoon: { 
+          auraDark: 'dark:from-slate-900', auraLight: 'from-slate-400', emoji: '🦚',
+          greeting: 'Listening to the monsoon rain and untangling user friction.', 
+          colors: ['#93c5fd', '#bfdbfe', '#60a5fa'], particleType: 'monsoon-calm', count: 80 
+        },
+        festive: { 
+          auraDark: 'dark:from-rose-900', auraLight: 'from-orange-200', emoji: '🪔',
+          greeting: 'Soaking in the festive energy and designing intuitive workflows.', 
+          colors: ['#f97316', '#fb923c', '#ea580c', '#facc15'], particleType: 'festive-calm', count: 40 
+        }
+      };
+
+      activeConfig = config[season];
+
+      // Update Auras
+      document.querySelectorAll('.seasonal-aura').forEach(aura => {
+        aura.className = aura.className.replace(/(from|dark:from)-[a-z]+-[0-9]+/g, '').replace(/\s+/g, ' ');
+        aura.classList.add(...activeConfig.auraLight.split(' '), ...activeConfig.auraDark.split(' '));
+      });
+
+      // Update Text
+      document.querySelectorAll('.seasonal-emoji').forEach(el => el.textContent = activeConfig.emoji);
+      document.querySelectorAll('.seasonal-greeting').forEach(el => {
+        el.textContent = activeConfig.greeting;
+        el.style.display = 'block';
+      });
+
+      // Subtle, elegant particle reseeding
+      particles = [];
+
+      for (let i = 0; i < activeConfig.count; i++) {
+        let p = {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          color: activeConfig.colors[Math.floor(Math.random() * activeConfig.colors.length)],
+          angle: Math.random() * 360,
+          spinSpeed: Math.random() * 0.02 - 0.01, // extremely slow spin
+          opacity: Math.random() * 0.4 + 0.1, // more transparent/subtle
+          pulseSpeed: Math.random() * 0.01 + 0.005,
+          oscillationDistance: Math.random() * 1 + 0.2, // barely swaying
+          oscillationSpeed: Math.random() * 0.02 + 0.01,
+          oscillationOffset: Math.random() * Math.PI * 2,
+        };
+
+        if (activeConfig.particleType === 'winter-calm') {
+          p.isFog = i < 5; // Just 5 background fog blobs
+          p.size = p.isFog ? Math.random() * 200 + 100 : Math.random() * 2 + 1;
+          p.speedY = p.isFog ? -(Math.random() * 0.1 + 0.05) : Math.random() * 0.5 + 0.2; // very slow falling
+          p.speedX = p.isFog ? Math.random() * 0.2 + 0.1 : Math.random() * 0.4 - 0.2;
+          p.opacity = p.isFog ? Math.random() * 0.05 + 0.01 : Math.random() * 0.5 + 0.2;
+        } 
+        else if (activeConfig.particleType === 'spring-calm') {
+          p.size = Math.random() * 4 + 2;
+          p.speedY = Math.random() * 0.5 + 0.2; 
+          p.speedX = Math.random() * 0.4 - 0.2;
+        } 
+        else if (activeConfig.particleType === 'summer-calm') {
+          p.size = Math.random() * 2 + 1.5;
+          p.speedY = -(Math.random() * 0.3 + 0.1); // float slowly up
+          p.speedX = Math.random() * 0.4 - 0.2;
+        } 
+        else if (activeConfig.particleType === 'monsoon-calm') {
+          p.size = Math.random() * 1.5 + 0.5; // thinner lines
+          p.opacity = Math.random() * 0.4 + 0.1; // faint
+          p.length = Math.random() * 10 + 5; // shorter drops
+          p.speedY = Math.random() * 6 + 4; // gentle shower, not a storm
+          p.speedX = Math.random() * 1 + 0.5;
+        } 
+        else if (activeConfig.particleType === 'festive-calm') {
+          p.size = Math.random() * 4 + 2;
+          p.speedY = Math.random() * 0.5 + 0.2;
+          p.speedX = Math.random() * 0.5 - 0.25;
+        }
+
+        particles.push(p);
+      }
+
+      const draw = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        time++;
+
+        particles.forEach(p => {
+          let currentOpacity = p.opacity;
+
+          // --- Very Gentle Mouse Repulsion ---
+          let dx = mouse.x - p.x;
+          let dy = mouse.y - p.y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < mouse.radius && !p.isFog && activeConfig.particleType !== 'monsoon-calm') {
+            let force = (mouse.radius - distance) / mouse.radius;
+            let repel = 1.5; // drastically reduced interaction force
+            p.x -= (dx / distance) * force * repel;
+            p.y -= (dy / distance) * force * repel;
+            p.angle += ((dx / distance) * force * 0.05); 
+          }
+
+          if (activeConfig.particleType === 'monsoon-calm' && distance < mouse.radius / 1.5) {
+             p.x += (Math.random() * 1 - 0.5); // barely deflection
+          }
+
+          // --- Rendering ---
+          if (activeConfig.particleType === 'winter-calm') {
+            if (p.isFog) {
+              p.x += p.speedX; p.y += p.speedY;
+              ctx.beginPath();
+              ctx.globalAlpha = currentOpacity;
+              let grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+              grad.addColorStop(0, 'rgba(255,255,255,0.2)');
+              grad.addColorStop(1, 'transparent');
+              ctx.fillStyle = grad;
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              p.x += Math.sin(time * p.oscillationSpeed) * 0.5; p.y += p.speedY;
+              ctx.beginPath();
+              ctx.globalAlpha = currentOpacity;
+              ctx.fillStyle = p.color;
+              ctx.shadowBlur = 4;
+              ctx.shadowColor = '#ffffff';
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.shadowBlur = 0;
+            }
+          } 
+          else if (activeConfig.particleType === 'spring-calm') {
+            p.x += Math.sin(time * p.oscillationSpeed + p.oscillationOffset) * p.oscillationDistance; 
+            p.y += p.speedY;
+            p.angle += p.spinSpeed;
+
+            ctx.beginPath();
+            ctx.globalAlpha = currentOpacity;
+            ctx.fillStyle = p.color;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.moveTo(0, -p.size * 2);
+            ctx.quadraticCurveTo(p.size, 0, 0, p.size * 2);
+            ctx.quadraticCurveTo(-p.size, 0, 0, -p.size * 2);
+            ctx.fill();
+            ctx.restore();
+          } 
+          else if (activeConfig.particleType === 'summer-calm') {
+            p.x += p.speedX; p.y += p.speedY;
+
+            currentOpacity = p.opacity + Math.sin(time * p.pulseSpeed) * 0.2;
+            currentOpacity = Math.min(1, Math.max(0.05, currentOpacity));
+            
+            ctx.beginPath();
+            ctx.globalAlpha = currentOpacity;
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = p.color;
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          } 
+          else if (activeConfig.particleType === 'monsoon-calm') {
+            p.x += p.speedX; p.y += p.speedY; 
+            
+            ctx.beginPath();
+            ctx.globalAlpha = p.opacity;
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = p.size;
+            ctx.lineCap = 'round';
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x - p.speedX, p.y - p.length);
+            ctx.stroke();
+          }
+          else if (activeConfig.particleType === 'festive-calm') {
+            p.x += Math.sin(time * p.oscillationSpeed) * p.oscillationDistance + p.speedX; 
+            p.y += p.speedY; 
+            p.angle += p.spinSpeed;
+            
+            ctx.beginPath();
+            ctx.globalAlpha = currentOpacity;
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = 3;
+            ctx.shadowColor = p.color;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.ellipse(0, 0, p.size * 0.8, p.size * 1.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            ctx.shadowBlur = 0;
+          }
+          
+          ctx.globalAlpha = 1;
+
+          // --- Boundary Resets ---
+          if (activeConfig.particleType === 'summer-calm' || (activeConfig.particleType === 'winter-calm' && p.isFog)) {
+             if (p.y < -50) { p.y = canvas.height + 50; p.x = Math.random() * canvas.width; }
+          } 
+          else if (activeConfig.particleType === 'monsoon-calm') {
+             if (p.y > canvas.height + 50) { 
+               p.y = -50; p.x = Math.random() * canvas.width; 
+             }
+          } 
+          else {
+             if (p.y > canvas.height + 50) { 
+               p.y = -50; p.x = Math.random() * canvas.width; 
+             }
+          }
+
+          if (p.x > canvas.width + 100) p.x = -50;
+          if (p.x < -100) p.x = canvas.width + 50;
+        });
+
+        currentAnimationId = requestAnimationFrame(draw);
+      };
+      
+      draw();
+    };
+
+    const saved = localStorage.getItem('preferred-season');
+    window.setSeason(saved || 'auto');
+
+    document.querySelectorAll('.season-selector').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('season-dropdown');
+        if (dropdown) dropdown.classList.add('hidden');
+        const s = e.currentTarget.getAttribute('data-season');
+        window.setSeason(s);
+      });
+    });
+  });
+</script>

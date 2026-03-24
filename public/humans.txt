@@ -1,0 +1,15 @@
+/* humans.txt — deeprajr.com
+   humanstxt.org */
+
+/* TEAM */
+  Product: Deepraj R
+  Site: https://deeprajr.com
+  Twitter: https://x.com/@Deepraj_R_
+  LinkedIn: https://linkedin.com/in/deeprajr/
+
+/* SITE */
+  Last update: 2026-03-23
+  Language: English
+  Doctype: HTML5
+  Framework: Astro
+  IDE: VS Code

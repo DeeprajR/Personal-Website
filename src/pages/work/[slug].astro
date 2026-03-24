@@ -1,0 +1,63 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const workEntries = await getCollection('work');
+  return workEntries.map(entry => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`${entry.data.title} | Deepraj R`}>
+  <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+    
+    <div class="mb-16">
+      <a href="/work" class="text-sm font-bold tracking-widest uppercase text-gray-400 hover:text-black mb-8 inline-block transition-colors">&larr; Back to Work</a>
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-6 leading-tight">
+        {entry.data.title}
+      </h1>
+      <div class="flex flex-col md:flex-row gap-8 py-8 border-y border-gray-100">
+        {entry.data.description && (
+          <p class="text-sm font-medium text-gray-700 leading-relaxed">{entry.data.description}</p>
+        )}
+      </div>
+
+    </div>
+
+    <div class="content-wrapper prose prose-gray max-w-none">
+      <style is:global>
+        @reference "tailwindcss";
+        .content-wrapper h3 {
+          @apply text-xl font-bold text-gray-900 mt-12 mb-4 border-b border-gray-100 pb-2;
+        }
+        .content-wrapper p {
+          @apply text-base text-gray-700 leading-relaxed mb-6 font-medium;
+        }
+        .content-wrapper ul {
+          @apply list-disc list-outside ml-5 mb-8 space-y-2 text-gray-700 font-medium;
+        }
+        .content-wrapper li {
+          @apply pl-1;
+        }
+        .content-wrapper strong {
+          @apply font-bold text-black;
+        }
+      </style>
+      <Content />
+    </div>
+
+    <div class="mt-24 pt-8 border-t border-gray-100 text-center">
+      <h3 class="text-xl font-bold text-gray-900 mb-6">Need similar leverage in your organization?</h3>
+      <a href="mailto:hello@deeprajr.com" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-colors">
+        Let's Talk
+      </a>
+    </div>
+
+  </article>
+</BaseLayout>
