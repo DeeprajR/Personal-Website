@@ -14,15 +14,6 @@ photographyEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 // Get top entries
 const topWork = workEntries.slice(0, 4);
 const recentResearch = researchEntries.slice(0, 5);
-const recentPhotos = photographyEntries.slice(0, 4);
-
-const principles = [
-  "I guide teams to reduce ambiguity before execution.",
-  "I align stakeholders so the team can scale work.",
-  "I build systems that empower teams to execute.",
-  "I drive the team to prioritize outcomes over activity.",
-  "I bridge technical and business silos to unify the team."
-];
 ---
 
 <BaseLayout title="Deepraj R | Product Manager">
@@ -107,15 +98,8 @@ const principles = [
         <a href={`/work/${entry.id}`} class="group block border border-gray-200 dark:border-gray-800 p-8 hover:border-black dark:hover:border-white transition-colors duration-200 flex flex-col h-full bg-white dark:bg-gray-900/50">
           <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:underline underline-offset-4 decoration-2">{entry.data.title}</h3>
           
-          <div class="mb-6 flex-grow space-y-4">
-            <div>
-              <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">The Problem</p>
-              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{entry.data.problem}</p>
-            </div>
-            <div>
-              <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">The Outcome</p>
-              <p class="text-sm font-medium text-black dark:text-gray-200 line-clamp-2">{entry.data.outcome}</p>
-            </div>
+          <div class="mb-6 flex-grow">
+            <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">{entry.data.description}</p>
           </div>
           
           <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-sm font-bold">
