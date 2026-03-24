@@ -14,215 +14,454 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </p>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div id="tools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
 
-      <!-- ═══════════════════════════════════════════════ -->
-      <!-- TOOL 1: Book Details Retriever                   -->
-      <!-- ═══════════════════════════════════════════════ -->
-      <div class="border border-gray-200 dark:border-gray-800 p-8 bg-gray-50 dark:bg-gray-900/40 lg:col-span-2">
-        <div class="flex items-start justify-between mb-6">
-          <div>
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Book Details Retriever</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Enter an ISBN-10 or ISBN-13 to fetch book details and generate a ready-to-paste library frontmatter block.</p>
-          </div>
-          <span class="text-xs font-bold tracking-widest uppercase text-gray-400 border border-gray-200 dark:border-gray-700 px-2 py-1">Library</span>
-        </div>
-        <div class="space-y-4">
-          <div class="flex gap-3">
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- TOOL 1: Book Details Retriever (Writing)        -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section id="book-retriever" class="tool-section">
+          <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+
             <div class="flex-1">
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">ISBN Number</label>
-              <input id="isbn-input" type="text" maxlength="17" placeholder="e.g. 9780307886231 or 0307886239"
-                class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors" />
-              <p id="isbn-error" class="text-xs text-red-500 font-mono mt-1 hidden"></p>
+              <div class="flex items-center gap-3 mb-2">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Book Details Retriever</h2>
+              </div>
+              <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Fetch book metadata and Open Library covers for your library frontmatter.</p>
             </div>
-            <div class="flex items-end">
-              <button id="isbn-fetch" class="px-6 py-2 border-2 border-black dark:border-white text-xs font-bold tracking-widest uppercase bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer whitespace-nowrap">
-                Fetch Book
+            <div class="mt-4 opacity-20 group-hover:opacity-100 transition-opacity self-end">
+              <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </button>
+          
+          <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+            <div class="max-w-xl">
+            <div class="space-y-6">
+              <div class="flex flex-col sm:flex-row gap-3">
+                <div class="flex-1">
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">ISBN Number</label>
+                  <input id="isbn-input" type="text" maxlength="17" placeholder="e.g. 9780307886231"
+                    class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
+                  <p id="isbn-error" class="text-xs text-red-500 font-mono mt-2 hidden"></p>
+                </div>
+                <div class="flex items-end">
+                  <button id="isbn-fetch" class="w-full sm:w-auto px-8 py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer whitespace-nowrap">
+                    Fetch Book
+                  </button>
+                </div>
+              </div>
+
+              <!-- Loading state -->
+              <div id="isbn-loading" class="hidden text-xs font-mono text-gray-400 dark:text-gray-500 animate-pulse">Fetching from Open Library...</div>
+
+              <!-- Preview + Output -->
+              <div id="isbn-result" class="hidden space-y-6">
+                <div id="isbn-preview" class="flex gap-4 p-4 border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20">
+                  <img id="isbn-cover" src="" alt="Cover" class="w-14 h-20 object-cover border border-gray-200 dark:border-gray-700 shrink-0" />
+                  <div>
+                    <p id="isbn-book-title" class="font-bold text-gray-900 dark:text-white text-sm"></p>
+                    <p id="isbn-book-author" class="text-xs text-gray-500 dark:text-gray-400 mt-1"></p>
+                    <p id="isbn-book-genres" class="text-[10px] text-gray-400 dark:text-gray-500 font-mono mt-2 uppercase tracking-wider"></p>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between items-center mb-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Frontmatter Output</label>
+                    <button id="isbn-copy" class="text-[10px] font-bold tracking-widest uppercase text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer">Copy HTML →</button>
+                  </div>
+                  <textarea id="isbn-output" rows="8" readonly
+                    class="w-full border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 text-gray-900 dark:text-white px-4 py-3 text-xs font-mono focus:outline-none resize-none"></textarea>
+                  <p id="isbn-copy-status" class="text-[10px] font-mono text-green-600 dark:text-green-400 mt-2 hidden">✓ Copied to clipboard</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOOL 2: Markdown Table Generator (Writing) -->
+      <section id="markdown-table" class="tool-section">
+        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Markdown Table Generator</h2>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Convert CSV or spreadsheet data into Markdown tables instantly.</p>
+          </div>
+          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
+
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+          <div class="max-w-xl">
+            <div class="space-y-6">
+              <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Input Data (CSV or Tab-separated)</label>
+                <textarea id="md-table-input" rows="5" placeholder="Name, Role, Location&#10;Alice, PM, London" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400 resize-none"></textarea>
+              </div>
+              <div class="flex flex-col sm:flex-row items-center gap-4">
+                <label class="flex items-center gap-3 cursor-pointer group w-full sm:w-auto">
+                  <input type="checkbox" id="md-table-header" checked class="w-4 h-4 accent-black dark:accent-white" />
+                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Use first row as header</span>
+                </label>
+                <button id="md-table-gen" class="w-full sm:flex-1 py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all cursor-pointer">Generate Table</button>
+              </div>
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Markdown Output</label>
+                  <button id="md-table-copy" class="text-[10px] font-bold tracking-widest uppercase text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer">Copy Table →</button>
+                </div>
+                <textarea id="md-table-output" rows="6" readonly placeholder="Markdown will appear here..." class="w-full border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 text-gray-900 dark:text-white px-4 py-3 text-xs font-mono focus:outline-none resize-none"></textarea>
+                <p id="md-table-status" class="text-[10px] font-mono text-green-600 dark:text-green-400 mt-2 hidden">✓ Copied to clipboard</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOOL 3: Feature Priority Calculator (Product) -->
+      <section id="feature-priority" class="tool-section">
+        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Feature Priority Calculator</h2>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Prioritize product features using the RICE framework (Reach, Impact, Confidence, Effort).</p>
+          </div>
+          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
+
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+          <div class="max-w-xl">
+            <div class="space-y-6">
+              <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Reach</label>
+                  <input id="rice-reach" type="number" min="0" placeholder="0" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Impact</label>
+                  <select id="rice-impact" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none cursor-pointer">
+                    <option value="3">3 — Massive</option>
+                    <option value="2" selected>2 — High</option>
+                    <option value="1">1 — Medium</option>
+                    <option value="0.5">0.5 — Low</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Confidence %</label>
+                  <input id="rice-confidence" type="number" min="1" max="100" placeholder="80" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Effort</label>
+                  <input id="rice-effort" type="number" min="0.1" step="0.5" placeholder="2.0" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
+                </div>
+              </div>
+              <button id="rice-calc" class="w-full py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
+                Calculate Score
               </button>
+              <div id="rice-result" class="hidden border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 p-8 text-center">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">RICE Priority Score</p>
+                <p id="rice-score" class="text-5xl font-black text-gray-900 dark:text-white font-mono"></p>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <!-- Loading state -->
-          <div id="isbn-loading" class="hidden text-sm font-mono text-gray-400 dark:text-gray-500 animate-pulse">Fetching from Open Library...</div>
+      <!-- TOOL 4: Meeting Cost Calculator (Product) -->
+      <section id="meeting-cost" class="tool-section">
+        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Meeting Cost Calculator</h2>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Find out how much that recurring meeting actually costs.</p>
+          </div>
+          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
 
-          <!-- Preview + Output -->
-          <div id="isbn-result" class="hidden space-y-4">
-            <div id="isbn-preview" class="flex gap-4 p-4 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-              <img id="isbn-cover" src="" alt="Cover" class="w-14 h-20 object-cover border border-gray-100 dark:border-gray-800 shrink-0" />
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+          <div class="max-w-xl">
+            <div class="space-y-6">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Attendees</label>
+                  <input id="meet-attendees" type="number" min="1" placeholder="6" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Avg. Salary (₹ LPA)</label>
+                  <input id="meet-salary" type="number" min="1" placeholder="18" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Duration (min)</label>
+                  <input id="meet-duration" type="number" min="1" placeholder="60" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Freq / week</label>
+                  <input id="meet-freq" type="number" min="1" placeholder="3" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
+                </div>
+              </div>
+              <button id="meet-calc" class="w-full py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
+                Calculate Cost
+              </button>
+              <div id="meet-result" class="hidden border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 p-6">
+                <div class="grid grid-cols-3 text-center gap-4">
+                  <div>
+                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">Meeting</p>
+                    <p id="meet-per" class="text-sm font-black text-gray-900 dark:text-white font-mono"></p>
+                  </div>
+                  <div>
+                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">Month</p>
+                    <p id="meet-month" class="text-sm font-black text-gray-900 dark:text-white font-mono"></p>
+                  </div>
+                  <div>
+                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">Year</p>
+                    <p id="meet-year" class="text-sm font-black text-gray-900 dark:text-white font-mono"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOOL 5: JSON Formatter (Developer) -->
+      <section id="json-formatter" class="tool-section">
+        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">JSON Formatter</h2>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Paste minified JSON to pretty-print and validate it instantly.</p>
+          </div>
+          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
+
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+          <div class="max-w-xl">
+            <div class="space-y-6">
               <div>
-                <p id="isbn-book-title" class="font-bold text-gray-900 dark:text-white text-sm"></p>
-                <p id="isbn-book-author" class="text-sm text-gray-500 dark:text-gray-400 mt-0.5"></p>
-                <p id="isbn-book-genres" class="text-xs text-gray-400 dark:text-gray-500 font-mono mt-1"></p>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Input JSON</label>
+                <textarea id="json-input" rows="8" placeholder='{"key":"value"}'
+                  class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400 resize-none"></textarea>
               </div>
-            </div>
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-widest">Frontmatter Output</label>
-                <button id="isbn-copy" class="text-xs font-bold tracking-widest uppercase text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer">Copy →</button>
+              
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button id="json-format" class="flex-1 py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
+                  Format
+                </button>
+                <button id="json-minify" class="flex-1 py-3.5 border-2 border-gray-200 dark:border-gray-700 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
+                  Minify
+                </button>
               </div>
-              <textarea id="isbn-output" rows="10" readonly
-                class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none resize-none"></textarea>
-              <p id="isbn-copy-status" class="text-xs font-mono text-green-600 dark:text-green-400 mt-1 hidden">✓ Copied to clipboard!</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- ═══════════════════════════════════════════════ -->
-      <!-- TOOL 2: RICE Score Calculator                    -->
-      <!-- ═══════════════════════════════════════════════ -->
-      <div class="border border-gray-200 dark:border-gray-800 p-8 bg-gray-50 dark:bg-gray-900/40">
-        <div class="flex items-start justify-between mb-6">
-          <div>
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">RICE Score Calculator</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Prioritize features using Reach × Impact × Confidence ÷ Effort</p>
-          </div>
-          <span class="text-xs font-bold tracking-widest uppercase text-gray-400 border border-gray-200 dark:border-gray-700 px-2 py-1">PM</span>
-        </div>
-        <div class="space-y-4">
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Reach / mo</label>
-              <input id="rice-reach" type="number" min="0" placeholder="e.g. 1000" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Impact (0.25–3)</label>
-              <select id="rice-impact" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors cursor-pointer">
-                <option value="3">3 — Massive</option>
-                <option value="2" selected>2 — High</option>
-                <option value="1">1 — Medium</option>
-                <option value="0.5">0.5 — Low</option>
-                <option value="0.25">0.25 — Minimal</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Confidence %</label>
-              <input id="rice-confidence" type="number" min="1" max="100" placeholder="e.g. 80" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Effort (person-weeks)</label>
-              <input id="rice-effort" type="number" min="0.1" step="0.5" placeholder="e.g. 2" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors" />
-            </div>
-          </div>
-          <button id="rice-calc" class="w-full py-2.5 border-2 border-black dark:border-white text-xs font-bold tracking-widest uppercase bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
-            Calculate Score
-          </button>
-          <div id="rice-result" class="hidden border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">RICE Score</p>
-            <p id="rice-score" class="text-4xl font-black text-gray-900 dark:text-white font-mono"></p>
-          </div>
-        </div>
-      </div>
+              <div id="json-status" class="text-[10px] font-mono uppercase tracking-widest hidden"></div>
 
-      <!-- ═══════════════════════════════════════════════ -->
-      <!-- TOOL 3: Meeting Cost Calculator                  -->
-      <!-- ═══════════════════════════════════════════════ -->
-      <div class="border border-gray-200 dark:border-gray-800 p-8 bg-gray-50 dark:bg-gray-900/40">
-        <div class="flex items-start justify-between mb-6">
-          <div>
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Meeting Cost Calculator</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Find out how much that recurring meeting actually costs.</p>
-          </div>
-          <span class="text-xs font-bold tracking-widest uppercase text-gray-400 border border-gray-200 dark:border-gray-700 px-2 py-1">PM</span>
-        </div>
-        <div class="space-y-4">
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Attendees</label>
-              <input id="meet-attendees" type="number" min="1" placeholder="e.g. 6" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Avg. Salary (₹ LPA)</label>
-              <input id="meet-salary" type="number" min="1" placeholder="e.g. 18" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Duration (minutes)</label>
-              <input id="meet-duration" type="number" min="1" placeholder="e.g. 60" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors" />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Frequency / week</label>
-              <input id="meet-freq" type="number" min="1" placeholder="e.g. 3" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors" />
-            </div>
-          </div>
-          <button id="meet-calc" class="w-full py-2.5 border-2 border-black dark:border-white text-xs font-bold tracking-widest uppercase bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
-            Calculate Cost
-          </button>
-          <div id="meet-result" class="hidden border border-gray-200 dark:border-gray-700 p-4">
-            <div class="grid grid-cols-3 text-center gap-2">
               <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Per Meeting</p>
-                <p id="meet-per" class="text-xl font-black text-gray-900 dark:text-white font-mono"></p>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Output</label>
+                  <button id="json-copy" class="text-[10px] font-bold tracking-widest uppercase text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer">Copy JSON →</button>
+                </div>
+                <textarea id="json-output" rows="10" readonly placeholder="Formatted output will appear here..."
+                  class="w-full border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 text-gray-900 dark:text-white px-4 py-3 text-xs font-mono focus:outline-none resize-none"></textarea>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- TOOL 6: Password Generator (Developer) -->
+      <section id="password-generator" class="tool-section">
+        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Password Generator</h2>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Generate secure, random passwords locally using cryptographically strong random values.</p>
+          </div>
+          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </button>
+
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+          <div class="max-w-xl">
+            <div class="space-y-8">
               <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Per Month</p>
-                <p id="meet-month" class="text-xl font-black text-gray-900 dark:text-white font-mono"></p>
+                <div class="flex justify-between items-center mb-4">
+                  <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Password Length: <span id="pw-length-val" class="text-gray-900 dark:text-white font-mono ml-2">16</span></label>
+                </div>
+                <input id="pw-length" type="range" min="8" max="64" value="16" class="w-full h-1.5 bg-gray-200 dark:bg-gray-800 rounded-none appearance-none cursor-pointer accent-black dark:accent-white" />
               </div>
-              <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Per Year</p>
-                <p id="meet-year" class="text-xl font-black text-gray-900 dark:text-white font-mono"></p>
+
+              <div class="grid grid-cols-2 gap-4">
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="checkbox" id="pw-upper" checked class="w-4 h-4 rounded-none border-gray-300 dark:border-gray-700 text-black dark:text-white focus:ring-black dark:focus:ring-white accent-black dark:accent-white" />
+                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Uppercase</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="checkbox" id="pw-lower" checked class="w-4 h-4 rounded-none border-gray-300 dark:border-gray-700 text-black dark:text-white focus:ring-black dark:focus:ring-white accent-black dark:accent-white" />
+                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Lowercase</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="checkbox" id="pw-numbers" checked class="w-4 h-4 rounded-none border-gray-300 dark:border-gray-700 text-black dark:text-white focus:ring-black dark:focus:ring-white accent-black dark:accent-white" />
+                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Numbers</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer group">
+                  <input type="checkbox" id="pw-symbols" class="w-4 h-4 rounded-none border-gray-300 dark:border-gray-700 text-black dark:text-white focus:ring-black dark:focus:ring-white accent-black dark:accent-white" />
+                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Special</span>
+                </label>
+              </div>
+
+              <div class="space-y-4">
+                <div class="relative group">
+                  <input id="pw-output" type="text" readonly 
+                    class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-4 text-lg font-mono tracking-wider focus:outline-none" />
+                  <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    <button id="pw-refresh" class="p-2 text-gray-400 hover:text-black dark:hover:text-white transition-colors" title="Regenerate">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    </button>
+                    <div class="w-px h-4 bg-gray-200 dark:bg-gray-800 mx-1"></div>
+                    <button id="pw-copy-btn" class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:hover:text-white transition-all">Copy</button>
+                  </div>
+                </div>
+                <p id="pw-status" class="text-[10px] text-center font-mono text-green-600 dark:text-green-400 uppercase tracking-widest hidden">✓ Securely copied to clipboard</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- ═══════════════════════════════════════════════ -->
-      <!-- TOOL 4: Reading Time Estimator                   -->
-      <!-- ═══════════════════════════════════════════════ -->
-      <div class="border border-gray-200 dark:border-gray-800 p-8 bg-gray-50 dark:bg-gray-900/40">
-        <div class="flex items-start justify-between mb-6">
-          <div>
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Reading Time Estimator</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Paste any text to get word count and estimated reading time.</p>
-          </div>
-          <span class="text-xs font-bold tracking-widest uppercase text-gray-400 border border-gray-200 dark:border-gray-700 px-2 py-1">Writing</span>
-        </div>
-        <div class="space-y-4">
-          <textarea id="read-text" rows="6" placeholder="Paste your text here..." class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors resize-none"></textarea>
-          <div class="grid grid-cols-3 gap-2 text-center">
-            <div class="border border-gray-200 dark:border-gray-700 p-3">
-              <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Words</p>
-              <p id="read-words" class="text-2xl font-black text-gray-900 dark:text-white font-mono">0</p>
-            </div>
-            <div class="border border-gray-200 dark:border-gray-700 p-3">
-              <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Characters</p>
-              <p id="read-chars" class="text-2xl font-black text-gray-900 dark:text-white font-mono">0</p>
-            </div>
-            <div class="border border-gray-200 dark:border-gray-700 p-3">
-              <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Read Time</p>
-              <p id="read-time" class="text-2xl font-black text-gray-900 dark:text-white font-mono">0m</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- ═══════════════════════════════════════════════ -->
-      <!-- TOOL 5: JSON Formatter                           -->
-      <!-- ═══════════════════════════════════════════════ -->
-      <div class="border border-gray-200 dark:border-gray-800 p-8 bg-gray-50 dark:bg-gray-900/40">
-        <div class="flex items-start justify-between mb-6">
-          <div>
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">JSON Formatter</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Paste minified JSON to pretty-print and validate it instantly.</p>
+      <!-- TOOL 7: Image Converter (Media) -->
+      <section id="image-converter" class="tool-section">
+        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Image Converter</h2>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Offline, secure batch image conversion to WebP, PNG, or JPEG.</p>
           </div>
-          <span class="text-xs font-bold tracking-widest uppercase text-gray-400 border border-gray-200 dark:border-gray-700 px-2 py-1">Dev</span>
-        </div>
-        <div class="space-y-3">
-          <textarea id="json-input" rows="5" placeholder='{"key":"value","arr":[1,2,3]}' class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none focus:border-black dark:focus:border-white transition-colors resize-none"></textarea>
-          <div class="flex gap-2">
-            <button id="json-format" class="flex-1 py-2.5 border-2 border-black dark:border-white text-xs font-bold tracking-widest uppercase bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">Format</button>
-            <button id="json-minify" class="flex-1 py-2.5 border-2 border-gray-400 dark:border-gray-600 text-xs font-bold tracking-widest uppercase text-gray-600 dark:text-gray-400 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">Minify</button>
-            <button id="json-copy" class="px-4 py-2.5 border-2 border-gray-400 dark:border-gray-600 text-xs font-bold tracking-widest uppercase text-gray-600 dark:text-gray-400 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">Copy</button>
+          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
           </div>
-          <div id="json-status" class="text-xs font-mono hidden"></div>
-          <textarea id="json-output" rows="6" readonly placeholder="Output appears here..." class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-3 py-2 text-sm font-mono focus:outline-none resize-none"></textarea>
-        </div>
-      </div>
+        </button>
 
-    </div>
-  </div>
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+          <div class="max-w-xl">
+            <div class="space-y-6">
+              <!-- Drop Zone -->
+              <div id="drop-zone" class="border-2 border-dashed border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 p-12 text-center transition-all group-hover:bg-gray-100 dark:group-hover:bg-gray-800/40">
+                <input type="file" id="img-input" multiple accept="image/*" class="hidden" />
+                <label for="img-input" class="cursor-pointer">
+                  <svg class="w-8 h-8 mx-auto text-gray-300 dark:text-gray-700 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Drop images here or <span class="text-black dark:text-white underline underline-offset-4">browse</span></p>
+                </label>
+              </div>
+
+              <!-- Options (Hidden initially) -->
+              <div id="img-options" class="hidden space-y-4 animate-in fade-in slide-in-from-top-2">
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                  <div class="flex-1 w-full">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Target Format</label>
+                    <select id="img-format" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none cursor-pointer">
+                      <option value="image/webp" selected>WEB P (Best Quality)</option>
+                      <option value="image/png">P N G</option>
+                      <option value="image/jpeg">J P E G</option>
+                    </select>
+                  </div>
+                  <button id="convert-all" class="w-full sm:w-auto px-8 py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                    Download All
+                  </button>
+                </div>
+                
+                <div id="img-list" class="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                  <!-- File cards will be injected here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div> <!-- End of #tools-container -->
+  </div> <!-- End of outer layout container -->
 
   <script is:inline>
+    // ── Accordion Logic ──────────────────────────────────────────
+    function initAccordion() {
+      const sections = document.querySelectorAll('.tool-section');
+      const buttons = document.querySelectorAll('.tool-card');
+
+      function closeAll() {
+        sections.forEach(s => {
+          s.classList.remove('is-active');
+          s.querySelector('.tool-card').setAttribute('aria-expanded', 'false');
+          const content = s.querySelector('.tool-content');
+          content.classList.add('hidden');
+          content.classList.remove('opacity-100');
+        });
+      }
+
+      function openTool(id) {
+        const target = document.getElementById(id.replace('#', ''));
+        if (!target) return;
+        
+        closeAll();
+        target.classList.add('is-active');
+        const card = target.querySelector('.tool-card');
+        card.setAttribute('aria-expanded', 'true');
+        const content = target.querySelector('.tool-content');
+        content.classList.remove('hidden');
+        setTimeout(() => content.classList.add('opacity-100'), 10);
+        
+        // Scroll to tool after a short delay for grid re-flow
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      }
+
+      buttons.forEach(btn => {
+        btn.onclick = (e) => {
+          const section = btn.closest('.tool-section');
+          const isActive = section.classList.contains('is-active');
+          const id = section.id;
+          
+          if (isActive) {
+            closeAll();
+            history.replaceState(null, null, ' '); // Clear hash
+          } else {
+            openTool(id);
+            history.replaceState(null, null, `#${id}`);
+          }
+        };
+      });
+
+      // Handle sidebar & deep links
+      window.addEventListener('hashchange', () => {
+        if (window.location.hash) openTool(window.location.hash);
+      });
+
+      // Initial state
+      if (window.location.hash) {
+        openTool(window.location.hash);
+      } else {
+        // Expand first tool by default?
+        // openTool('book-retriever');
+      }
+    }
+
+    initAccordion();
+
     // ── Book Details Retriever (ISBN) ─────────────────────────────
     function validateISBN(raw) {
       const cleaned = raw.replace(/[\s\-]/g, '');
@@ -281,8 +520,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         const coverUrl = book.cover?.large || book.cover?.medium || `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
         const bookUrl  = `https://openlibrary.org/isbn/${isbn}`;
         const today    = new Date().toISOString().split('T')[0];
-        const rawGenres = book.subjects ? book.subjects.slice(0, 4).map(s => s.name || s) : [];
-        const genres   = rawGenres.length > 0 ? rawGenres : ['Non-fiction'];
+        const subjects = book.subjects ? book.subjects.map(s => (s.name || s).toLowerCase()) : [];
+        let genres = subjects.map(s => {
+          if (s.includes('self-help') || s.includes('improvement')) return 'Self-Improvement';
+          if (s.includes('business') || s.includes('productivity') || s.includes('time')) return 'Productivity';
+          if (s.includes('psychology') || s.includes('behavior') || s.includes('social')) return 'Psychology';
+          if (s.includes('philosophy') || s.includes('spirituality') || s.includes('mind') || s.includes('religion')) return 'Mindset';
+          if (s.includes('fiction') || s.includes('novel')) return 'Fiction';
+          if (s.includes('technology') || s.includes('computer') || s.includes('hacking')) return 'Technology';
+          if (s.includes('science') || s.includes('nature')) return 'Science';
+          return null;
+        }).filter(Boolean);
+        genres = [...new Set(genres)];
+        if (genres.length === 0) {
+          // Fallback to top subjects if no match, capitalized
+          genres = book.subjects ? book.subjects.slice(0, 1).map(s => {
+            const n = s.name || s;
+            return n.charAt(0).toUpperCase() + n.slice(1);
+          }) : ['Non-Fiction'];
+        }
         const genreList = genres.map(g => `"${g}"`).join(', ');
         const markdown = `---\ntitle: "${title}"\nauthor: "${author}"\ncoverImage: "${coverUrl}"\nurl: "${bookUrl}"\ndateAdded: ${today}\ngenres: [${genreList}]\n---`;
 
@@ -345,16 +601,55 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       document.getElementById('meet-result').classList.remove('hidden');
     });
 
-    // ── Reading Time ──────────────────────────────────────────────
-    document.getElementById('read-text').addEventListener('input', (e) => {
-      const text  = e.target.value.trim();
-      const words = text ? text.split(/\s+/).length : 0;
-      const chars = text.length;
-      const mins  = Math.ceil(words / 238);
-      document.getElementById('read-words').textContent = words.toLocaleString();
-      document.getElementById('read-chars').textContent = chars.toLocaleString();
-      document.getElementById('read-time').textContent  = words < 5 ? '0m' : `${mins}m`;
+
+    // ── Password Generator ────────────────────────────────────────
+    const charset = {
+      upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      lower: 'abcdefghijklmnopqrstuvwxyz',
+      numbers: '0123456789',
+      symbols: '!@#$%^&*()_+~`|}{[]:;?><,./-='
+    };
+
+    function generatePassword() {
+      const length = parseInt(document.getElementById('pw-length').value);
+      let chars = '';
+      if (document.getElementById('pw-upper').checked) chars += charset.upper;
+      if (document.getElementById('pw-lower').checked) chars += charset.lower;
+      if (document.getElementById('pw-numbers').checked) chars += charset.numbers;
+      if (document.getElementById('pw-symbols').checked) chars += charset.symbols;
+      
+      if (!chars) {
+        document.getElementById('pw-output').value = 'Select at least one set';
+        return;
+      }
+
+      let password = '';
+      const array = new Uint32Array(length);
+      window.crypto.getRandomValues(array);
+      for (let i = 0; i < length; i++) {
+        password += chars[array[i] % chars.length];
+      }
+      document.getElementById('pw-output').value = password;
+    }
+
+    document.getElementById('pw-length').addEventListener('input', (e) => {
+      document.getElementById('pw-length-val').textContent = e.target.value;
+      generatePassword();
     });
+    ['pw-upper', 'pw-lower', 'pw-numbers', 'pw-symbols'].forEach(id => {
+      document.getElementById(id).addEventListener('change', generatePassword);
+    });
+    document.getElementById('pw-refresh').addEventListener('click', generatePassword);
+    document.getElementById('pw-copy-btn').addEventListener('click', () => {
+      const val = document.getElementById('pw-output').value;
+      if (!val || val === 'Select at least one set') return;
+      navigator.clipboard.writeText(val).then(() => {
+        const s = document.getElementById('pw-status');
+        s.classList.remove('hidden');
+        setTimeout(() => s.classList.add('hidden'), 2000);
+      });
+    });
+    generatePassword(); // Initial call
 
     // ── JSON Formatter ────────────────────────────────────────────
     const jsonInput  = document.getElementById('json-input');
@@ -396,5 +691,270 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         setTimeout(() => jsonStatus.classList.add('hidden'), 2000);
       });
     });
+
+    // ── Batch Image Converter ──────────────────────────────────────
+    const imgInput = document.getElementById('img-input');
+    const imgList = document.getElementById('img-list');
+    const imgFormatSelect = document.getElementById('img-format');
+    const convertAllBtn = document.getElementById('convert-all');
+    const dropZone = document.getElementById('drop-zone');
+    const imgOptions = document.getElementById('img-options');
+    let convertedFiles = [];
+
+    async function handleFiles(files) {
+      if (files.length === 0) return;
+      imgList.innerHTML = '';
+      convertedFiles = [];
+      convertAllBtn.disabled = true;
+      imgOptions.classList.remove('hidden');
+
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) continue;
+
+        const card = document.createElement('div');
+        card.className = 'p-4 border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-2';
+        card.innerHTML = `
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-bold text-gray-900 dark:text-white truncate">${file.name}</p>
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest">${(file.size / 1024).toFixed(1)} KB</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="status-indicator w-2 h-2 rounded-full bg-gray-300 animate-pulse"></div>
+            <button class="download-btn hidden text-[10px] font-black uppercase tracking-widest hover:underline">Save</button>
+          </div>
+        `;
+        imgList.appendChild(card);
+
+        try {
+          const blob = await convertImage(file, imgFormatSelect.value);
+          const extension = imgFormatSelect.value.split('/')[1];
+          const newName = file.name.split('.')[0] + '.' + (extension === 'jpeg' ? 'jpg' : extension);
+          const url = URL.createObjectURL(blob);
+          
+          convertedFiles.push({ url, name: newName });
+          
+          const indicator = card.querySelector('.status-indicator');
+          indicator.classList.remove('bg-gray-300', 'animate-pulse');
+          indicator.classList.add('bg-green-500');
+          
+          const btn = card.querySelector('.download-btn');
+          btn.classList.remove('hidden');
+          btn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = newName;
+            a.click();
+          };
+        } catch (err) {
+          console.error('Conversion error:', err);
+          const indicator = card.querySelector('.status-indicator');
+          indicator.classList.remove('bg-gray-300', 'animate-pulse');
+          indicator.classList.add('bg-red-500');
+        }
+      }
+
+      if (convertedFiles.length > 0) {
+        convertAllBtn.disabled = false;
+      }
+    }
+
+    imgInput.addEventListener('change', (e) => handleFiles(Array.from(e.target.files)));
+
+    // Drag-and-drop handlers
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, e => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.add('border-black', 'dark:border-white'), false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.remove('border-black', 'dark:border-white'), false);
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      handleFiles(Array.from(files));
+    }, false);
+
+    convertAllBtn.addEventListener('click', () => {
+      convertedFiles.forEach((file, index) => {
+        setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = file.url;
+          a.download = file.name;
+          a.click();
+        }, index * 200);
+      });
+    });
+
+    function convertImage(file, targetType) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error('Canvas toBlob failed'));
+            }, targetType, 0.9);
+          };
+          img.onerror = () => reject(new Error('Image metadata error'));
+          img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('File load error'));
+        reader.readAsDataURL(file);
+      });
+    }
+    // ── Markdown Table Generator ────────────────────────────────
+    document.getElementById('md-table-gen').addEventListener('click', () => {
+      const input = document.getElementById('md-table-input').value.trim();
+      if (!input) return;
+
+      const lines = input.split('\n');
+      const data = lines.map(line => {
+        if (line.includes('\t')) return line.split('\t');
+        if (line.includes(',')) return line.split(',').map(s => s.trim());
+        return [line];
+      });
+
+      const maxCols = Math.max(...data.map(row => row.length));
+      let markdown = '';
+      
+      data.forEach((row, i) => {
+        const paddedRow = row.concat(Array(maxCols - row.length).fill(''));
+        markdown += '| ' + paddedRow.join(' | ') + ' |\n';
+        if (i === 0 && document.getElementById('md-table-header').checked) {
+          markdown += '| ' + Array(maxCols).fill('---').join(' | ') + ' |\n';
+        }
+      });
+
+      document.getElementById('md-table-output').value = markdown;
+    });
+
+    document.getElementById('md-table-copy').addEventListener('click', () => {
+      const val = document.getElementById('md-table-output').value;
+      if (!val) return;
+      navigator.clipboard.writeText(val).then(() => {
+        const s = document.getElementById('md-table-status');
+        s.classList.remove('hidden');
+        setTimeout(() => s.classList.add('hidden'), 2000);
+      });
+    });
   </script>
+
+  <style>
+    /* Premium Grid logic */
+    #tools-container {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      grid-auto-flow: dense;
+    }
+    
+    @media (min-width: 768px) {
+      #tools-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      #tools-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .tool-section {
+      scroll-margin-top: 100px;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 1.5rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .tool-section {
+      background: rgba(17, 24, 39, 0.4);
+      border-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .tool-section:hover {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark .tool-section:hover {
+      background: rgba(17, 24, 39, 0.6);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    }
+
+    .tool-section.is-active {
+      grid-column: 1 / -1 !important;
+      order: -1; 
+      overflow: visible !important;
+      height: auto !important;
+      background: #ffffff !important;
+      border-color: rgba(0, 0, 0, 0.1);
+      transform: translateY(0);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      animation: expand-row 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dark .tool-section.is-active {
+      background: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Centering the 7th item if it's alone in a 3-column grid */
+    @media (min-width: 1024px) {
+      .tool-section:last-child:nth-child(3n+1):not(.is-active) {
+         grid-column: 2; /* Center in the middle column */
+      }
+    }
+    
+    /* Centering the 7th item if it's alone in a 2-column grid */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .tool-section:last-child:nth-child(even):not(.is-active) {
+         grid-column: 1 / span 2;
+         max-width: 400px;
+         justify-self: center;
+         width: 100%;
+      }
+    }
+
+    @keyframes expand-row {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e5e7eb;
+      border-radius: 10px;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #374151;
+    }
+  </style>
 </BaseLayout>

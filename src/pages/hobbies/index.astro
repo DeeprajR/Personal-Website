@@ -22,7 +22,7 @@ allPhotography.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 // Show ALL photos — grid auto-fills columns based on viewport width
 
 const allLibrary = await getCollection('library');
-allLibrary.sort((a, b) => b.data.dateAdded.valueOf() - a.data.dateAdded.valueOf());
+allLibrary.sort((a, b) => a.data.title.localeCompare(b.data.title));
 const featuredBooks = allLibrary.slice(0, 4);
 ---
 

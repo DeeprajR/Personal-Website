@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const allLibrary = await getCollection('library');
-allLibrary.sort((a, b) => b.data.dateAdded.valueOf() - a.data.dateAdded.valueOf());
+allLibrary.sort((a, b) => a.data.title.localeCompare(b.data.title));
 
 const groupedLibrary = allLibrary.reduce((acc, book) => {
   const genres = book.data.genres && book.data.genres.length > 0 ? book.data.genres : ['Uncategorized'];
