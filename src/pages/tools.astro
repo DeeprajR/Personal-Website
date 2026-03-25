@@ -858,7 +858,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #tools-container {
       display: grid;
       grid-template-columns: repeat(1, 1fr);
-      grid-auto-flow: dense;
     }
     
     @media (min-width: 768px) {
@@ -884,10 +883,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
 
-    .dark .tool-section {
-      background: rgba(17, 24, 39, 0.4);
-      border-color: rgba(255, 255, 255, 0.05);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    :global(.dark) .tool-section {
+      background: rgba(17, 24, 39, 0.8);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
     }
 
     .tool-section:hover {
@@ -897,15 +896,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
-    .dark .tool-section:hover {
-      background: rgba(17, 24, 39, 0.6);
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    :global(.dark) .tool-section:hover {
+      background: rgba(17, 24, 39, 0.95);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
     }
 
     .tool-section.is-active {
       grid-column: 1 / -1 !important;
-      order: -1; 
       overflow: visible !important;
       height: auto !important;
       background: #ffffff !important;
@@ -915,10 +913,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       animation: expand-row 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .dark .tool-section.is-active {
-      background: #111827 !important;
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    :global(.dark) .tool-section.is-active {
+      background: #0f172a !important;
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
     }
 
     /* Centering the 7th item if it's alone in a 3-column grid */
@@ -953,8 +951,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       background: #e5e7eb;
       border-radius: 10px;
     }
-    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #374151;
+    :global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #475569;
     }
   </style>
 </BaseLayout>
