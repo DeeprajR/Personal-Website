@@ -12,15 +12,24 @@
   --font-sans: "Inter", "Roboto", "Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif;
 
   --animate-marquee: marquee 30s linear infinite;
+  --animate-fade-in-up: fade-in-up 0.8s ease-out forwards;
   
   @keyframes marquee {
     0% { transform: translateX(0); }
     100% { transform: translateX(-100%); }
+  }
+
+  @keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 }
 
 @layer base {
   body {
     @apply bg-brand-white text-brand-black font-sans antialiased;
+  }
+  a, button {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gray-900 dark:focus-visible:ring-brand-white;
   }
 }

@@ -1,0 +1,131 @@
+{
+  "groups": [
+    { "id": 0, "name": "Core", "description": "Me" },
+    { "id": 1, "name": "Work", "description": "Professional colleagues" },
+    { "id": 2, "name": "University", "description": "Academic connections" },
+    { "id": 3, "name": "Research", "description": "Research partners" },
+    { "id": 4, "name": "Community", "description": "Community" }
+  ],
+  "nodes": [
+    { 
+      "id": "Me", "group": 0, "radius": 20,
+      "jobTitle": "Product Manager", "organization": "My Company", 
+      "image": "https://avatars.githubusercontent.com/u/9919?s=200&v=4",
+      "linkedin": "https://linkedin.com/in/#", "website": "https://deeprajr.com" 
+    },
+    
+    { 
+      "id": "Work", "group": 1, "radius": 15,
+      "jobTitle": "Context Hub", "organization": "General Work", 
+      "linkedin": "", "website": "" 
+    },
+    { 
+      "id": "Tech Corp", "group": 1, "radius": 12,
+      "jobTitle": "Organization", "organization": "Tech Corp", 
+      "linkedin": "", "website": "" 
+    },
+    { 
+      "id": "Design Studio", "group": 1, "radius": 12,
+      "jobTitle": "Organization", "organization": "Design Studio", 
+      "linkedin": "", "website": "" 
+    },
+    { 
+      "id": "Alice", "group": 1, "radius": 10,
+      "jobTitle": "Lead Engineer", "organization": "Tech Corp", 
+      "image": "https://avatars.githubusercontent.com/u/1024?s=200&v=4",
+      "linkedin": "https://linkedin.com/in/#", "website": "" 
+    },
+    { 
+      "id": "Bob", "group": 1, "radius": 10,
+      "jobTitle": "Designer", "organization": "Design Studio",
+      "image": "https://avatars.githubusercontent.com/u/1234?s=200&v=4",
+      "linkedin": "https://linkedin.com/in/#", "website": "https://bob.design" 
+    },
+    { 
+      "id": "Charlie", "group": 1, "radius": 10,
+      "jobTitle": "Marketing Manager", "organization": "Design Studio", 
+      "linkedin": "https://linkedin.com/in/#", "website": "" 
+    },
+    
+    { 
+      "id": "University", "group": 2, "radius": 15,
+      "jobTitle": "Context Hub", "organization": "Alma Mater", 
+      "linkedin": "", "website": "" 
+    },
+    {
+      "id": "MIT", "group": 2, "radius": 12,
+      "jobTitle": "School", "organization": "MIT",
+      "linkedin": "", "website": ""
+    },
+    { 
+      "id": "David", "group": 2, "radius": 10,
+      "jobTitle": "Professor", "organization": "MIT", 
+      "image": "https://avatars.githubusercontent.com/u/5678?s=200&v=4",
+      "linkedin": "https://linkedin.com/in/#", "website": "https://uni.edu/~david" 
+    },
+    { 
+      "id": "Eve", "group": 2, "radius": 10,
+      "jobTitle": "Alumni", "organization": "MIT", 
+      "linkedin": "https://linkedin.com/in/#", "website": "" 
+    },
+    
+    { 
+      "id": "Research", "group": 3, "radius": 15,
+      "jobTitle": "Context Hub", "organization": "Open Source", 
+      "linkedin": "", "website": "" 
+    },
+    { 
+      "id": "AI Lab", "group": 3, "radius": 12,
+      "jobTitle": "Think Tank", "organization": "AI Lab", 
+      "linkedin": "", "website": "" 
+    },
+    { 
+      "id": "Frank", "group": 3, "radius": 10,
+      "jobTitle": "Data Scientist", "organization": "AI Lab", 
+      "image": "https://avatars.githubusercontent.com/u/2345?s=200&v=4",
+      "linkedin": "https://linkedin.com/in/#", "website": "https://franksai.io" 
+    },
+    { 
+      "id": "Grace", "group": 3, "radius": 10,
+      "jobTitle": "Researcher", "organization": "AI Lab", 
+      "linkedin": "https://linkedin.com/in/#", "website": "" 
+    },
+    { 
+      "id": "Heidi", "group": 3, "radius": 10,
+      "jobTitle": "Postdoc", "organization": "Global Institute", 
+      "linkedin": "https://linkedin.com/in/#", "website": "" 
+    },
+    { 
+      "id": "Community", "group": 4, "radius": 15,
+      "jobTitle": "Community", "organization": "Community", 
+      "linkedin": "https://linkedin.com/in/#", "website": "https://deeprajr.com" 
+    }
+  ],
+  "links": [
+    { "source": "Me", "target": "Work", "value": 5 },
+    { "source": "Me", "target": "University", "value": 5 },
+    { "source": "Me", "target": "Research", "value": 5 },
+    { "source": "Me", "target": "Community", "value": 1},
+    
+    { "source": "Work", "target": "Tech Corp", "value": 2 },
+    { "source": "Work", "target": "Design Studio", "value": 2 },
+    
+    { "source": "Tech Corp", "target": "Alice", "value": 1 },
+    { "source": "Design Studio", "target": "Bob", "value": 1 },
+    { "source": "Design Studio", "target": "Charlie", "value": 1 },
+    { "source": "Alice", "target": "Bob", "value": 1 },
+    
+    { "source": "University", "target": "MIT", "value": 2 },
+    { "source": "MIT", "target": "David", "value": 1 },
+    { "source": "MIT", "target": "Eve", "value": 1 },
+    { "source": "David", "target": "Eve", "value": 1 },
+    
+    { "source": "Research", "target": "AI Lab", "value": 2 },
+    { "source": "AI Lab", "target": "Frank", "value": 1 },
+    { "source": "AI Lab", "target": "Grace", "value": 1 },
+    { "source": "Research", "target": "Heidi", "value": 1 },
+    { "source": "Frank", "target": "Grace", "value": 1 },
+    
+    { "source": "Community", "target": "Me", "value": 1 }
+  ]
+}

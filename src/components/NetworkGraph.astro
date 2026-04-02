@@ -1,0 +1,308 @@
+---
+import * as d3 from 'd3';
+import peopleData from '../data/people.json';
+
+const width = 1000;
+const height = 800;
+
+// We pre-calculate the layout entirely on the server side using Node.js.
+// This guarantees zero lag and no main-thread blocking when the user visits the page.
+const simNodes = peopleData.nodes.map(d => Object.create(d));
+const simLinks = peopleData.links.map(d => Object.create(d));
+
+const simulation = d3.forceSimulation(simNodes)
+  .force('link', d3.forceLink(simLinks).id(d => d.id).distance(80).strength(1))
+  .force('charge', d3.forceManyBody().strength(-300))
+  .force('center', d3.forceCenter(width / 2, height / 2))
+  .force('x', d3.forceX(width / 2).strength(0.05))
+  .force('y', d3.forceY(height / 2).strength(0.05))
+  .force('collide', d3.forceCollide().radius(d => d.radius + 30).iterations(3));
+
+simulation.stop();
+for (let i = 0; i < 300; ++i) simulation.tick();
+
+// Strip circular references from the layout before passing to the client DOM
+const initialNodes = simNodes.map(n => ({
+  id: n.id,
+  group: n.group,
+  radius: n.radius,
+  jobTitle: n.jobTitle,
+  organization: n.organization,
+  linkedin: n.linkedin,
+  website: n.website,
+  image: n.image,
+  x: n.x,
+  y: n.y,
+  vx: n.vx,
+  vy: n.vy
+}));
+
+const initialLinks = simLinks.map(l => ({
+  source: l.source.id,
+  target: l.target.id
+}));
+
+const precomputedDataStr = JSON.stringify({ nodes: initialNodes, links: initialLinks, width, height, rawGroups: peopleData.groups || [] });
+const nodesWithImages = initialNodes.filter(n => n.image);
+
+function sanitizeId(id) {
+  return id.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+}
+---
+
+<div class="network-wrapper relative w-full h-[600px] md:h-[700px] border-y-2 md:border-2 border-black dark:border-white bg-brand-gray-50 dark:bg-brand-gray-900 overflow-hidden">
+  <div class="absolute inset-0 z-0 pointer-events-none" style="background-image: radial-gradient(var(--tw-colors-gray-300) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.2;"></div>
+  <div class="absolute inset-0 z-0 pointer-events-none dark:block hidden" style="background-image: radial-gradient(var(--tw-colors-gray-600) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.2;"></div>
+  
+  <!-- Server-rendered data carrier -->
+  <div id="network-data" class="hidden" data-payload={precomputedDataStr}></div>
+
+  <svg id="network-graph" class="relative z-10 w-full h-full cursor-crosshair active:cursor-move">
+    <defs>
+      {nodesWithImages.map(node => (
+        <pattern id={`img-${sanitizeId(node.id)}`} x="0" y="0" height="1" width="1" patternContentUnits="objectBoundingBox">
+          <image href={node.image} x="0" y="0" height="1" width="1" preserveAspectRatio="xMidYMid slice" style="filter: grayscale(100%);" />
+        </pattern>
+      ))}
+    </defs>
+  </svg>
+  
+  <div id="network-tooltip" class="absolute z-50 pointer-events-auto opacity-0 bg-white dark:bg-black border-2 border-black dark:border-white p-4 shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] transition-opacity duration-150 rounded-none w-64" style="left:0; top:0; visibility: hidden;">
+     <div class="flex justify-between items-start mb-2">
+       <div>
+         <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400" id="tooltip-group"></div>
+         <div class="text-xl font-extrabold text-black dark:text-white leading-tight" id="tooltip-name"></div>
+       </div>
+       <button id="close-tooltip" class="hidden text-gray-400 hover:text-black dark:hover:text-white font-bold text-xl leading-none px-1" aria-label="Close">&times;</button>
+     </div>
+     
+     <div id="tooltip-job" class="text-sm font-bold text-gray-800 dark:text-gray-200"></div>
+     <div id="tooltip-org" class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3"></div>
+     
+     <div id="tooltip-links" class="flex gap-4 border-t-2 border-gray-100 dark:border-gray-800 pt-3 mt-1 hidden">
+        <a id="link-linkedin" href="#" target="_blank" class="text-xs font-bold uppercase tracking-widest hover:underline decoration-2 hidden text-blue-600 dark:text-blue-400">LinkedIn</a>
+        <a id="link-website" href="#" target="_blank" class="text-xs font-bold uppercase tracking-widest hover:underline decoration-2 hidden text-black dark:text-white">Website</a>
+     </div>
+  </div>
+</div>
+
+<script>
+  import * as d3 from 'd3';
+
+  const container = document.querySelector('.network-wrapper');
+  const svgWrapper = document.getElementById('network-graph');
+  const tooltip = document.getElementById('network-tooltip');
+  const dataEl = document.getElementById('network-data');
+
+  if (container && svgWrapper && tooltip && dataEl) {
+    const payload = JSON.parse(dataEl.dataset.payload);
+    
+    // Create lookup for group names
+    const groupMap = {};
+    if (payload.rawGroups) {
+      payload.rawGroups.forEach(g => { groupMap[g.id] = g.name; });
+    }
+
+    const { nodes, links, width: baseWidth, height: baseHeight } = payload;
+    
+    const svg = d3.select(svgWrapper)
+      .attr('viewBox', [0, 0, baseWidth, baseHeight]);
+
+    const g = svg.append('g');
+
+    const zoom = d3.zoom().scaleExtent([0.5, 3]).on('zoom', (event) => {
+      g.attr('transform', event.transform);
+    });
+    
+    svg.call(zoom);
+
+    // Initialize simulation with pre-arranged DOM coordinates. 
+    // We alphaTarget(0) so it doesn't try to move initially!
+    const simulation = d3.forceSimulation(nodes)
+      .force('link', d3.forceLink(links).id(d => d.id).distance(80).strength(1))
+      .force('charge', d3.forceManyBody().strength(-300))
+      .force('center', d3.forceCenter(baseWidth / 2, baseHeight / 2))
+      .force('x', d3.forceX(baseWidth / 2).strength(0.05))
+      .force('y', d3.forceY(baseHeight / 2).strength(0.05))
+      .force('collide', d3.forceCollide().radius(d => d.radius + 30).iterations(3));
+      
+    // Force simulation is cold. Do not start ticking unless dragged.
+    simulation.alpha(0);
+    simulation.stop();
+
+    const link = g.append('g')
+      .selectAll('line')
+      .data(links)
+      .join('line')
+      .attr('class', 'stroke-gray-300 dark:stroke-gray-700')
+      .attr('stroke-width', 2);
+
+    const node = g.append('g')
+      .selectAll('circle')
+      .data(nodes)
+      .join('circle')
+      .attr('r', d => d.radius)
+      // Visual group styling
+      .attr('class', d => {
+        let baseClass = 'stroke-black dark:stroke-white stroke-2 cursor-pointer';
+        
+        if (!d.image) {
+          if (d.group === 0) baseClass += ' fill-black dark:fill-white';
+          else if (d.group === 2 || d.group === 1) baseClass += ' fill-white dark:fill-brand-gray-900';
+          else if (d.group === 3) baseClass += ' fill-gray-200 dark:fill-gray-800';
+          else if (d.group === 4) baseClass += ' fill-gray-100 dark:fill-gray-950';
+          else baseClass += ' fill-white dark:fill-brand-gray-900';
+        }
+        return baseClass;
+      })
+      .attr('fill', d => d.image ? `url(#img-${d.id.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()})` : null)
+      .attr('stroke-dasharray', d => d.group === 2 ? '4,4' : d.group === 4 ? '1,4' : 'none')
+      .call(drag(simulation));
+
+    const labels = g.append('g')
+      .selectAll('text')
+      .data(nodes)
+      .join('text')
+      .text(d => d.id)
+      .attr('font-size', d => d.group === 0 ? '14px' : '12px')
+      .attr('class', d => d.group === 0 ? 'fill-black dark:fill-white font-bold pointer-events-none' : 'fill-gray-700 dark:fill-gray-300 font-bold pointer-events-none')
+      .attr('text-anchor', 'middle')
+      .attr('dy', d => d.radius + 16);
+
+    // Initial Manual Layout Update based on pre-computed values
+    function updateDOM() {
+      link
+        .attr('x1', d => d.source.x)
+        .attr('y1', d => d.source.y)
+        .attr('x2', d => d.target.x)
+        .attr('y2', d => d.target.y);
+
+      node
+        .attr('cx', d => d.x = Math.max(d.radius, Math.min(baseWidth - d.radius, d.x)))
+        .attr('cy', d => d.y = Math.max(d.radius, Math.min(baseHeight - d.radius, d.y)));
+        
+      labels
+        .attr('x', d => d.x)
+        .attr('y', d => d.y);
+    }
+    updateDOM();
+    
+    // Only attach DOM updates when dragged and physics are reactivated
+    simulation.on('tick', updateDOM);
+
+    // Sticky UI Logic
+    let stickyNodeId = null;
+    const tooltipName = document.getElementById('tooltip-name');
+    const tooltipGroup = document.getElementById('tooltip-group');
+    const tooltipJob = document.getElementById('tooltip-job');
+    const tooltipOrg = document.getElementById('tooltip-org');
+    const tooltipLinks = document.getElementById('tooltip-links');
+    const linkLinkedin = document.getElementById('link-linkedin');
+    const linkWebsite = document.getElementById('link-website');
+    const closeTooltipBtn = document.getElementById('close-tooltip');
+    
+    closeTooltipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      stickyNodeId = null;
+      hideTooltip();
+    });
+
+    function updateTooltipContent(d) {
+      tooltipName.textContent = d.id;
+      tooltipGroup.textContent = groupMap[d.group] || 'Connection';
+      tooltipJob.textContent = d.jobTitle || '';
+      tooltipOrg.textContent = d.organization || '';
+      
+      let hasLinks = false;
+      if (d.linkedin) { linkLinkedin.href = d.linkedin; linkLinkedin.classList.remove('hidden'); hasLinks = true; } 
+      else { linkLinkedin.classList.add('hidden'); }
+      
+      if (d.website) { linkWebsite.href = d.website; linkWebsite.classList.remove('hidden'); hasLinks = true; } 
+      else { linkWebsite.classList.add('hidden'); }
+      
+      if (hasLinks) { tooltipLinks.classList.remove('hidden'); } 
+      else { tooltipLinks.classList.add('hidden'); }
+    }
+
+    function positionTooltip(event, d) {
+      const [x, y] = d3.pointer(event, container);
+      const tooltipRect = tooltip.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      let leftOffset = x + 15;
+      let topOffset = y + 15;
+      if (x + 15 + tooltipRect.width > containerRect.width) leftOffset = x - tooltipRect.width - 15;
+      if (y + 15 + tooltipRect.height > containerRect.height) topOffset = y - tooltipRect.height - 15;
+      tooltip.style.left = `${leftOffset}px`;
+      tooltip.style.top = `${topOffset}px`;
+    }
+
+    function highlightNode(d) {
+      node.attr('opacity', n => n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id)) ? 1 : 0.2);
+      labels.attr('opacity', n => n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id)) ? 1 : 0.2);
+      link.attr('class', l => l.source.id === d.id || l.target.id === d.id ? 'stroke-black dark:stroke-white' : 'stroke-gray-200 dark:stroke-gray-800 opacity-30').attr('stroke-width', l => l.source.id === d.id || l.target.id === d.id ? 3 : 1);
+    }
+
+    function resetHighlight() {
+      node.attr('opacity', 1);
+      labels.attr('opacity', 1);
+      link.attr('class', 'stroke-gray-300 dark:stroke-gray-700').attr('stroke-width', 2);
+    }
+
+    function hideTooltip() {
+      if (!stickyNodeId) {
+        tooltip.style.opacity = '0';
+        tooltip.style.visibility = 'hidden';
+        resetHighlight();
+      } else {
+        const stickyNode = nodes.find(n => n.id === stickyNodeId);
+        if (stickyNode) { updateTooltipContent(stickyNode); highlightNode(stickyNode); }
+      }
+    }
+
+    node.on('mouseover', (event, d) => {
+      if (stickyNodeId === d.id) return; 
+      tooltip.style.visibility = 'visible';
+      tooltip.style.opacity = '1';
+      closeTooltipBtn.classList.add('hidden'); 
+      updateTooltipContent(d);
+      positionTooltip(event, d);
+      highlightNode(d);
+    })
+    .on('mousemove', (event, d) => {
+      if (stickyNodeId) return;
+      positionTooltip(event, d);
+    })
+    .on('mouseout', (event, d) => {
+      if (stickyNodeId === d.id) return;
+      hideTooltip();
+    })
+    .on('click', (event, d) => {
+      if (stickyNodeId === d.id) {
+        stickyNodeId = null; hideTooltip();
+      } else {
+        stickyNodeId = d.id; 
+        tooltip.style.visibility = 'visible'; tooltip.style.opacity = '1';
+        closeTooltipBtn.classList.remove('hidden'); 
+        updateTooltipContent(d); positionTooltip(event, d); highlightNode(d);
+      }
+    });
+
+    function drag(simulation) {
+      function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.1).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      }
+      function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+      }
+      function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      }
+      return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended);
+    }
+  }
+</script>

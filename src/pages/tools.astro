@@ -120,166 +120,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </section>
 
-      <!-- TOOL 3: Feature Priority Calculator (Product) -->
-      <section id="feature-priority" class="tool-section">
-        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
-          <div class="flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Feature Priority Calculator</h2>
-            </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Prioritize product features using the RICE framework (Reach, Impact, Confidence, Effort).</p>
-          </div>
-          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
-            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
-          </div>
-        </button>
-
-        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
-          <div class="max-w-xl">
-            <div class="space-y-6">
-              <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Reach</label>
-                  <input id="rice-reach" type="number" min="0" placeholder="0" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Impact</label>
-                  <select id="rice-impact" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none cursor-pointer">
-                    <option value="3">3 — Massive</option>
-                    <option value="2" selected>2 — High</option>
-                    <option value="1">1 — Medium</option>
-                    <option value="0.5">0.5 — Low</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Confidence %</label>
-                  <input id="rice-confidence" type="number" min="1" max="100" placeholder="80" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Effort</label>
-                  <input id="rice-effort" type="number" min="0.1" step="0.5" placeholder="2.0" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
-                </div>
-              </div>
-              <button id="rice-calc" class="w-full py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
-                Calculate Score
-              </button>
-              <div id="rice-result" class="hidden border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 p-8 text-center">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">RICE Priority Score</p>
-                <p id="rice-score" class="text-5xl font-black text-gray-900 dark:text-white font-mono"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TOOL 4: Meeting Cost Calculator (Product) -->
-      <section id="meeting-cost" class="tool-section">
-        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
-          <div class="flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Meeting Cost Calculator</h2>
-            </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Find out how much that recurring meeting actually costs.</p>
-          </div>
-          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
-            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
-          </div>
-        </button>
-
-        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
-          <div class="max-w-xl">
-            <div class="space-y-6">
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Attendees</label>
-                  <input id="meet-attendees" type="number" min="1" placeholder="6" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Avg. Salary (₹ LPA)</label>
-                  <input id="meet-salary" type="number" min="1" placeholder="18" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Duration (min)</label>
-                  <input id="meet-duration" type="number" min="1" placeholder="60" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Freq / week</label>
-                  <input id="meet-freq" type="number" min="1" placeholder="3" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
-                </div>
-              </div>
-              <button id="meet-calc" class="w-full py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
-                Calculate Cost
-              </button>
-              <div id="meet-result" class="hidden border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 p-6">
-                <div class="grid grid-cols-3 text-center gap-4">
-                  <div>
-                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">Meeting</p>
-                    <p id="meet-per" class="text-sm font-black text-gray-900 dark:text-white font-mono"></p>
-                  </div>
-                  <div>
-                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">Month</p>
-                    <p id="meet-month" class="text-sm font-black text-gray-900 dark:text-white font-mono"></p>
-                  </div>
-                  <div>
-                    <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-1">Year</p>
-                    <p id="meet-year" class="text-sm font-black text-gray-900 dark:text-white font-mono"></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TOOL 5: JSON Formatter (Developer) -->
-      <section id="json-formatter" class="tool-section">
-        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
-          <div class="flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">JSON Formatter</h2>
-            </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Paste minified JSON to pretty-print and validate it instantly.</p>
-          </div>
-          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
-            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
-          </div>
-        </button>
-
-        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
-          <div class="max-w-xl">
-            <div class="space-y-6">
-              <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Input JSON</label>
-                <textarea id="json-input" rows="8" placeholder='{"key":"value"}'
-                  class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400 resize-none"></textarea>
-              </div>
-              
-              <div class="flex flex-col sm:flex-row gap-3">
-                <button id="json-format" class="flex-1 py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
-                  Format
-                </button>
-                <button id="json-minify" class="flex-1 py-3.5 border-2 border-gray-200 dark:border-gray-700 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
-                  Minify
-                </button>
-              </div>
-
-              <div id="json-status" class="text-[10px] font-mono uppercase tracking-widest hidden"></div>
-
-              <div>
-                <div class="flex justify-between items-center mb-2">
-                  <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Output</label>
-                  <button id="json-copy" class="text-[10px] font-bold tracking-widest uppercase text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer">Copy JSON →</button>
-                </div>
-                <textarea id="json-output" rows="10" readonly placeholder="Formatted output will appear here..."
-                  class="w-full border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 text-gray-900 dark:text-white px-4 py-3 text-xs font-mono focus:outline-none resize-none"></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      <!-- TOOL 6: Password Generator (Developer) -->
+      <!-- TOOL 3: Password Generator (Developer) -->
       <section id="password-generator" class="tool-section">
         <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
           <div class="flex-1">
@@ -342,7 +183,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </section>
 
 
-      <!-- TOOL 7: Image Converter (Media) -->
+      <!-- TOOL 4: Image Converter (Media) -->
       <section id="image-converter" class="tool-section">
         <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
           <div class="flex-1">
@@ -571,37 +412,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       });
     });
 
-    // ── RICE Score ──────────────────────────────────────────────
-    document.getElementById('rice-calc').addEventListener('click', () => {
-      const reach  = parseFloat(document.getElementById('rice-reach').value) || 0;
-      const impact = parseFloat(document.getElementById('rice-impact').value) || 0;
-      const conf   = parseFloat(document.getElementById('rice-confidence').value) || 0;
-      const effort = parseFloat(document.getElementById('rice-effort').value) || 1;
-      if (!reach || !conf || !effort) return;
-      const score = (reach * impact * (conf / 100)) / effort;
-      document.getElementById('rice-score').textContent = score.toFixed(1);
-      document.getElementById('rice-result').classList.remove('hidden');
-    });
-
-    // ── Meeting Cost ─────────────────────────────────────────────
-    document.getElementById('meet-calc').addEventListener('click', () => {
-      const attendees = parseFloat(document.getElementById('meet-attendees').value) || 0;
-      const salaryLPA = parseFloat(document.getElementById('meet-salary').value) || 0;
-      const duration  = parseFloat(document.getElementById('meet-duration').value) || 0;
-      const freq      = parseFloat(document.getElementById('meet-freq').value) || 0;
-      if (!attendees || !salaryLPA || !duration || !freq) return;
-      const hourly     = (salaryLPA * 100000) / (250 * 8);
-      const perMeeting = hourly * (duration / 60) * attendees;
-      const perMonth   = perMeeting * freq * 4;
-      const perYear    = perMeeting * freq * 52;
-      const fmt = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
-      document.getElementById('meet-per').textContent   = fmt(perMeeting);
-      document.getElementById('meet-month').textContent = fmt(perMonth);
-      document.getElementById('meet-year').textContent  = fmt(perYear);
-      document.getElementById('meet-result').classList.remove('hidden');
-    });
-
-
     // ── Password Generator ────────────────────────────────────────
     const charset = {
       upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -651,47 +461,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     });
     generatePassword(); // Initial call
 
-    // ── JSON Formatter ────────────────────────────────────────────
-    const jsonInput  = document.getElementById('json-input');
-    const jsonOutput = document.getElementById('json-output');
-    const jsonStatus = document.getElementById('json-status');
-
-    function setStatus(msg, ok) {
-      jsonStatus.textContent = msg;
-      jsonStatus.className = `text-xs font-mono ${ok ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`;
-      jsonStatus.classList.remove('hidden');
-    }
-
-    document.getElementById('json-format').addEventListener('click', () => {
-      try {
-        const parsed = JSON.parse(jsonInput.value);
-        jsonOutput.value = JSON.stringify(parsed, null, 2);
-        setStatus('✓ Valid JSON', true);
-      } catch (e) {
-        jsonOutput.value = '';
-        setStatus('✗ ' + e.message, false);
-      }
-    });
-
-    document.getElementById('json-minify').addEventListener('click', () => {
-      try {
-        const parsed = JSON.parse(jsonInput.value || jsonOutput.value);
-        jsonOutput.value = JSON.stringify(parsed);
-        setStatus('✓ Minified', true);
-      } catch (e) {
-        setStatus('✗ ' + e.message, false);
-      }
-    });
-
-    document.getElementById('json-copy').addEventListener('click', () => {
-      const text = jsonOutput.value;
-      if (!text) return;
-      navigator.clipboard.writeText(text).then(() => {
-        setStatus('✓ Copied to clipboard!', true);
-        setTimeout(() => jsonStatus.classList.add('hidden'), 2000);
-      });
-    });
-
     // ── Batch Image Converter ──────────────────────────────────────
     const imgInput = document.getElementById('img-input');
     const imgList = document.getElementById('img-list');
@@ -700,9 +469,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const dropZone = document.getElementById('drop-zone');
     const imgOptions = document.getElementById('img-options');
     let convertedFiles = [];
+    let currentInputFiles = [];
 
     async function handleFiles(files) {
       if (files.length === 0) return;
+      currentInputFiles = files;
       imgList.innerHTML = '';
       convertedFiles = [];
       convertAllBtn.disabled = true;
@@ -720,7 +491,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
           <div class="flex items-center gap-3">
             <div class="status-indicator w-2 h-2 rounded-full bg-gray-300 animate-pulse"></div>
-            <button class="download-btn hidden text-[10px] font-black uppercase tracking-widest hover:underline">Save</button>
+            <button class="download-btn hidden px-4 py-2 border-2 border-black dark:border-white text-[10px] font-black uppercase tracking-widest bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">Save</button>
           </div>
         `;
         imgList.appendChild(card);
@@ -759,6 +530,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     imgInput.addEventListener('change', (e) => handleFiles(Array.from(e.target.files)));
+
+    imgFormatSelect.addEventListener('change', () => {
+      if (currentInputFiles.length > 0) {
+        handleFiles(currentInputFiles);
+      }
+    });
 
     // Drag-and-drop handlers
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {

@@ -3,7 +3,7 @@ title: "APR - Awareness, Pause, and Reframe"
 hook: "The APR framework is a simple yet powerful tool for improving decision-making and execution. It consists of three steps"
 date: 2026-03-23
 tags: ["Learnings"]
-categories: [""]
+categories: ["Adaptability and Resilience"]
 ---
 
 ### The APR Framework
