@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import heroImg from '../assets/deepraj-black-and-white.webp';
+import speakerImg from '../assets/deepraj-speaker.webp';
 
 const workEntries = await getCollection('work');
 const researchEntries = await getCollection('research');
@@ -38,7 +41,7 @@ const recentResearch = researchEntries.slice(0, 5);
     </div>
     <div class="hidden md:block w-48 h-48 lg:w-64 lg:h-64 shrink-0 relative group">
       <div class="absolute inset-0 bg-gray-200 rounded-full animate-pulse group-hover:hidden"></div>
-      <img src="/deepraj-black-and-white.webp" alt="Deepraj R" class="relative z-10 w-full h-full object-cover rounded-full shadow-sm grayscale hover:grayscale-0 transition-all duration-500" loading="eager" />
+      <Image src={heroImg} alt="Deepraj R" class="relative z-10 w-full h-full object-cover rounded-full shadow-sm grayscale hover:grayscale-0 transition-all duration-500" loading="eager" />
     </div>
   </section>
 
@@ -123,7 +126,7 @@ const recentResearch = researchEntries.slice(0, 5);
     <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-center">
       
       <div class="md:col-span-5 relative">
-        <img src="/deepraj-speaker.webp" alt="Deepraj R" class="rounded-3xl w-full h-[350px] md:h-[450px] object-cover shadow-sm transition-transform duration-700 hover:scale-[1.02]" />
+        <Image src={speakerImg} alt="Deepraj R" class="rounded-3xl w-full h-[350px] md:h-[450px] object-cover shadow-sm transition-transform duration-700 hover:scale-[1.02]" />
         <div class="seasonal-aura absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-tr from-gray-200 to-transparent dark:from-gray-800 dark:to-transparent rounded-full blur-[80px] opacity-60 transition-colors duration-[2000ms]"></div>
       </div>
 

@@ -1,5 +1,10 @@
 ---
 import '../styles/global.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/inter/800.css';
 import SeasonalEffects from '../components/SeasonalEffects.astro';
 
 interface Props {
@@ -61,11 +66,6 @@ const isHome = pathname === '/' || pathname === '';
       }
     </script>
 
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <script is:inline>
       const theme = (() => {
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -186,8 +186,10 @@ const isHome = pathname === '/' || pathname === '';
         // Typewriter tick
         function type() {
           if (index < phrase.length) {
-            textEl.textContent += phrase[index++];
-            setTimeout(type, charMs);
+            requestAnimationFrame(() => {
+              textEl.textContent += phrase[index++];
+              setTimeout(type, charMs);
+            });
           }
         }
         setTimeout(type, 120); // slight delay before starting
