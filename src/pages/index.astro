@@ -4,19 +4,33 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import heroImg from '../assets/deepraj-black-and-white.webp';
 import speakerImg from '../assets/deepraj-speaker.webp';
+import { learningTopics } from '../data/learningTopics';
 
 const workEntries = await getCollection('work');
-const researchEntries = await getCollection('research');
+const learningEntries = await getCollection('learning');
 const photographyEntries = await getCollection('photography');
 
 // Sort by date (descending)
 workEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-researchEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+learningEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 photographyEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 // Get top entries
 const topWork = workEntries.slice(0, 4);
-const recentResearch = researchEntries.slice(0, 5);
+
+// Group learning entries by topic
+function getTopicId(entryId: string): string {
+  const parts = entryId.split('/');
+  return parts.length > 1 ? parts[0] : 'uncategorized';
+}
+const entriesByTopic = learningEntries.reduce((acc, entry) => {
+  const topicId = getTopicId(entry.id);
+  if (!acc[topicId]) acc[topicId] = [];
+  acc[topicId].push(entry);
+  return acc;
+}, {} as Record<string, typeof learningEntries>);
+
+const activeTopics = learningTopics.filter(t => t.status === 'active');
 ---
 
 <BaseLayout title="Deepraj R | Product Manager">
@@ -24,18 +38,18 @@ const recentResearch = researchEntries.slice(0, 5);
   <!-- Hero Section -->
   <section class="max-w-5xl mx-auto px-6 py-24 md:py-32 flex flex-col md:flex-row md:items-center gap-12 md:gap-16">
     <div class="max-w-2xl flex-1">
-      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-brand-gray-900 dark:text-white leading-tight mb-6 animate-fade-in-up opacity-0">
+      <h1 class="text-4xl md:text-6xl font-black tracking-tight text-black dark:text-white leading-tight mb-6 animate-fade-in-up opacity-0">
         Helps you turn chaos into aligned execution.
       </h1>
-      <p class="text-lg md:text-xl text-brand-gray-600 dark:text-gray-300 mb-10 leading-relaxed font-medium">
+      <p class="text-lg md:text-xl text-black dark:text-white mb-10 leading-relaxed font-bold">
         Product Manager guiding tech, marketing, and business teams to transform ambiguous problems into shipped outcomes.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 relative z-20">
         <a href="#work" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-colors">
           See Outcomes
         </a>
-        <a href="/research" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
-          Read Insights
+        <a href="/learning" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
+          Learning Journal
         </a>
       </div>
     </div>
@@ -48,10 +62,10 @@ const recentResearch = researchEntries.slice(0, 5);
   <!-- Credibility / Proof Strip -->
   <section class="border-y border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 py-12">
     <div class="max-w-5xl mx-auto px-6 text-center">
-      <p class="text-sm font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
+      <p class="text-sm font-black tracking-widest uppercase text-black dark:text-white mb-4">
         Product | Technology | Marketing | Research
       </p>
-      <p class="text-lg font-medium text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+      <p class="text-lg font-bold text-black dark:text-white max-w-2xl mx-auto">
         Proven track record of coordinating cross-functional teams and delivering complex initiatives.
       </p>
     </div>
@@ -93,22 +107,22 @@ const recentResearch = researchEntries.slice(0, 5);
   <section id="work" class="max-w-5xl mx-auto px-6 py-24 border-b border-gray-100 dark:border-gray-800">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
       <div>
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-4">Signature Projects</h2>
-        <p class="text-gray-500 dark:text-gray-400 max-w-xl">Deep-dive case studies on deploying high-leverage systems to align engineering, product, and business goals.</p>
+        <h2 class="text-3xl font-black tracking-tight text-black dark:text-white mb-4 uppercase">Signature Projects</h2>
+        <p class="text-black dark:text-white font-bold max-w-xl">Deep-dive case studies on deploying high-leverage systems to align engineering, product, and business goals.</p>
       </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       {topWork.map((entry) => (
-        <a href={`/work/${entry.id}`} class="group block border border-gray-200 dark:border-gray-800 p-8 hover:border-black dark:hover:border-white hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-white/5 transition-all duration-300 flex flex-col h-full bg-white dark:bg-gray-900/50">
-          <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:underline underline-offset-4 decoration-2">{entry.data.title}</h3>
+        <a href={`/work/${entry.id}`} class="group block border-2 border-black dark:border-white p-8 bg-white dark:bg-black text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 flex flex-col h-full overflow-hidden relative">
+          <h3 class="text-xl font-black mb-3 uppercase tracking-tight group-hover:text-white dark:group-hover:text-black transition-colors">{entry.data.title}</h3>
           
           <div class="mb-6 flex-grow">
-            <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">{entry.data.description}</p>
+            <p class="text-sm font-bold line-clamp-3 leading-relaxed group-hover:opacity-100 group-hover:text-white dark:group-hover:text-black transition-colors">{entry.data.description}</p>
           </div>
           
-          <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-sm font-bold">
-            <span class="text-black dark:text-white group-hover:translate-x-1 transition-transform">Read Case Study &rarr;</span>
+          <div class="mt-auto pt-6 border-t border-black dark:border-white group-hover:border-white dark:group-hover:border-black flex items-center justify-between text-xs font-black uppercase tracking-widest transition-colors">
+            <span class="group-hover:text-white dark:group-hover:text-black">Outcome Insight &rarr;</span>
           </div>
         </a>
       ))}
@@ -131,14 +145,14 @@ const recentResearch = researchEntries.slice(0, 5);
       </div>
 
       <div class="md:col-span-7 space-y-6">
-        <h2 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4">
+        <h2 class="text-4xl lg:text-5xl font-black tracking-tight text-black dark:text-white mb-4 uppercase">
           Hi, I'm Deepraj. <span class="seasonal-emoji">👋</span>
         </h2>
-        <p class="seasonal-greeting hidden text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-6"></p>
-        <p class="text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+        <p class="seasonal-greeting hidden text-xs font-black uppercase tracking-widest text-black dark:text-white mb-6"></p>
+        <p class="text-xl text-black dark:text-white leading-relaxed font-bold">
           I'm a Product Manager who sits squarely at the messy intersection of engineering logic, beautiful design, and user psychology.
         </p>
-        <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-8">
+        <p class="text-lg text-black dark:text-white leading-relaxed font-bold mb-8">
           My journey didn't start in a sterile boardroom. It started with tearing apart hardware and software and trying to figure out how complex systems were wired together. Over the years, I've evolved into untangling organizational friction and architecting products with empathy.
         </p>
         <div class="pt-4">
@@ -151,42 +165,69 @@ const recentResearch = researchEntries.slice(0, 5);
     </div>
   </section>
 
-  <!-- Writing / Research -->
-  <section id="research" class="max-w-5xl mx-auto px-6 py-24 border-b border-gray-100 dark:border-gray-800">
+  <!-- Currently Learning -->
+  <section id="learning" class="max-w-5xl mx-auto px-6 py-24 border-b border-gray-100 dark:border-gray-800">
     <div class="mb-12">
-      <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">Latest Insights</h2>
-      <p class="text-gray-500 dark:text-gray-400 max-w-xl">Notes on execution, product strategy, and operational leverage.</p>
+      <h2 class="text-3xl font-black tracking-tight text-black dark:text-white mb-4 uppercase">Currently Learning</h2>
+      <p class="text-black dark:text-white font-bold max-w-xl">What I'm actively studying right now — journal entries, notes, and frameworks.</p>
     </div>
 
-    <div class="space-y-0 border-t border-gray-200 dark:border-gray-800">
-      {recentResearch.map((post) => (
-        <a href={`/research/${post.id}`} class="group block py-8 border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors px-4 -mx-4">
-          <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
-            <div class="max-w-3xl">
-              <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-black dark:group-hover:text-white mb-2">{post.data.title}</h3>
-              <p class="text-gray-600 dark:text-gray-400 font-medium">{post.data.hook}</p>
-            </div>
-            <div class="shrink-0 text-sm text-gray-400 dark:text-gray-500 font-mono">
-              {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-            </div>
+    <div class="space-y-6">
+      {activeTopics.map(topic => {
+        const topicEntries = (entriesByTopic[topic.id] || []).slice(0, 3);
+        return (
+          <div class="group border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300">
+            <a href={`/learning/${topic.id}`} class="block p-8">
+              <div class="flex items-center gap-4 mb-4">
+                <div class="flex-grow">
+                  <h3 class="text-xl font-black tracking-tight uppercase group-hover:text-white dark:group-hover:text-black transition-colors">{topic.name}</h3>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Active</span>
+                </div>
+              </div>
+            </a>
+            {topicEntries.length > 0 && (
+              <div class="border-t border-black dark:border-white group-hover:border-white dark:group-hover:border-black transition-colors">
+                {topicEntries.map((entry, i) => {
+                  const slug = entry.id.split('/').slice(1).join('/');
+                  return (
+                  <a href={`/learning/${topic.id}/${slug}`} class={`group/entry block px-8 py-4 flex items-baseline justify-between gap-4 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black group-hover:text-white dark:group-hover:text-black transition-colors ${i < topicEntries.length - 1 ? 'border-b border-black dark:border-white group-hover:border-white dark:group-hover:border-black/20' : ''}`}>
+                    <div class="flex items-baseline gap-4 min-w-0">
+                      <span class="text-xs font-mono font-black shrink-0 w-20 group-hover:opacity-100 transition-opacity">
+                        {entry.data.date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}
+                      </span>
+                      <span class="text-sm font-bold truncate transition-colors uppercase">
+                        {entry.data.title}
+                      </span>
+                    </div>
+                    <span class="text-xs font-black transition-colors">&rarr;</span>
+                  </a>
+                )})}
+              </div>
+            )}
           </div>
-        </a>
-      ))}
+        );
+      })}
     </div>
 
     <div class="mt-12 flex justify-start">
-      <a href="/research" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
-        Read All Insights &rarr;
+      <a href="/learning" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
+        View Full Journal &rarr;
       </a>
     </div>
   </section>
 
   <!-- Bottom CTA -->
   <section id="contact" class="max-w-5xl mx-auto px-6 py-32 text-center">
-    <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-8 max-w-3xl mx-auto">
+    <h2 class="text-3xl md:text-5xl font-black tracking-tight text-black dark:text-white mb-8 max-w-3xl mx-auto uppercase">
       Dealing with unclear execution, cross-team friction, or messy product workflows?
     </h2>
-    <p class="text-xl text-gray-500 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
+    <p class="text-xl text-black dark:text-white font-bold mb-10 max-w-2xl mx-auto">
       Let's talk about diagnosing the problem and establishing leverage.
     </p>
     <a href="mailto:hello@deeprajr.com" class="inline-flex justify-center items-center px-8 py-4 border-2 border-black dark:border-white text-base font-bold tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-colors">

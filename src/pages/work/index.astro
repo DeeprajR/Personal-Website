@@ -9,15 +9,15 @@ workEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 <BaseLayout title="Work & Projects | Deepraj R" description="A collection of my case studies and published works.">
   <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
     <header class="mb-16">
-      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-gray-100">
+      <h1 class="text-4xl md:text-5xl font-black tracking-tighter mb-4 text-black dark:text-white uppercase">
         Signature Projects
       </h1>
-      <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed">
+      <p class="text-lg text-black dark:text-white font-bold max-w-2xl leading-relaxed">
         A collection of case studies, published articles, and operational deep dives from my time working with cross-functional teams.
       </p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {workEntries.map((entry) => {
         const isExternal = !!entry.data.url;
         const href = isExternal ? entry.data.url : `/work/${entry.id}`;
@@ -26,15 +26,15 @@ workEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
           <a href={href} 
              target={isExternal ? "_blank" : "_self"}
              rel={isExternal ? "noopener noreferrer" : ""}
-             class="group flex flex-col justify-between p-8 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 transition-all duration-300 min-h-[320px]">
+             class="group flex flex-col justify-between p-8 bg-white dark:bg-black text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-2 border-black dark:border-white transition-all duration-300 min-h-[340px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
             
             <div>
               <div class="flex justify-between items-start mb-6">
-                <span class="text-xs font-bold text-gray-400 dark:text-gray-500 font-mono tracking-widest uppercase">
+                <span class="text-xs font-black font-mono tracking-widest uppercase group-hover:opacity-100 group-hover:text-white dark:group-hover:text-black transition-all">
                   {entry.data.date.getFullYear()}
                 </span>
                 {isExternal && (
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 dark:text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-colors group-hover:text-white dark:group-hover:text-black" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                     <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"></path>
                     <path d="M11 13l9 -9"></path>
@@ -43,11 +43,11 @@ workEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
                 )}
               </div>
 
-              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-black dark:group-hover:text-white leading-tight">
+              <h2 class="text-xl font-black mb-4 leading-tight uppercase tracking-tighter group-hover:text-white dark:group-hover:text-black transition-colors">
                 {entry.data.title}
               </h2>
               
-              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+              <p class="text-sm font-bold group-hover:opacity-100 group-hover:text-white dark:group-hover:text-black line-clamp-4 transition-all">
                 {entry.data.description}
               </p>
             </div>
@@ -55,7 +55,7 @@ workEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
             {entry.data.tags && entry.data.tags.length > 0 && (
               <div class="mt-8 flex flex-wrap gap-2">
                 {entry.data.tags.slice(0, 3).map(tag => (
-                  <span class="text-xs font-bold bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 uppercase tracking-widest px-2 py-1 border border-gray-200 dark:border-gray-700">
+                  <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 border-2 border-black dark:border-white group-hover:border-white dark:group-hover:border-black group-hover:text-white dark:group-hover:text-black transition-all">
                     {tag}
                   </span>
                 ))}

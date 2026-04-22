@@ -1,0 +1,111 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getTopicById } from '../../../data/learningTopics';
+
+export async function getStaticPaths() {
+  const allLearning = await getCollection('learning');
+  return allLearning.map(entry => {
+    const parts = entry.id.split('/');
+    const topicId = parts.length > 1 ? parts[0] : 'uncategorized';
+    const slug = parts.length > 1 ? parts.slice(1).join('/') : entry.id;
+    return {
+      params: { topic: topicId, slug },
+      props: { entry, topicId },
+    };
+  });
+}
+
+const { entry, topicId } = Astro.props;
+const { Content } = await render(entry);
+const topic = getTopicById(topicId);
+const topicName = topic?.name || topicId;
+---
+
+<BaseLayout title={`${entry.data.title} | ${topicName} | Deepraj R`}>
+  <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+
+    <!-- Breadcrumb -->
+    <nav class="mb-16 text-center">
+      <div class="flex items-center justify-center gap-4 text-[10px] font-black tracking-widest uppercase text-black dark:text-white flex-wrap opacity-40">
+        <a href="/learning" class="hover:text-black dark:hover:text-white transition-colors underline underline-offset-4 decoration-2">Learning</a>
+        <span>/</span>
+        <a href={`/learning/${topicId}`} class="hover:text-black dark:hover:text-white transition-colors underline underline-offset-4 decoration-2">{topicName}</a>
+      </div>
+    </nav>
+
+    <!-- Article Header -->
+    <div class="mb-16 text-center">
+      <h1 class="text-4xl md:text-6xl font-black tracking-tighter text-black dark:text-white mb-8 leading-none max-w-2xl mx-auto uppercase">
+        {entry.data.title}
+      </h1>
+
+      {entry.data.hook && (
+        <p class="text-lg md:text-2xl text-black dark:text-white font-black max-w-2xl mx-auto opacity-70 leading-tight">
+          {entry.data.hook}
+        </p>
+      )}
+
+      <div class="mt-12 text-xs font-black uppercase tracking-[0.2em] text-black dark:text-white opacity-40">
+        {entry.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+      </div>
+    </div>
+
+    <!-- Article Content -->
+    <div class="content-wrapper prose dark:prose-invert max-w-none mx-auto">
+      <style is:global>
+        @reference "tailwindcss";
+        .content-wrapper :where(h1) {
+          @apply text-3xl font-black mt-16 mb-6 tracking-tighter uppercase;
+        }
+        .content-wrapper :where(h2) {
+          @apply text-2xl font-black mt-14 mb-5 tracking-tighter uppercase;
+        }
+        .content-wrapper :where(h3) {
+          @apply text-xl font-black mt-16 mb-6 tracking-tighter uppercase border-b-2 border-black dark:border-white pb-2;
+        }
+        .content-wrapper :where(p) {
+          @apply text-lg leading-relaxed mb-8 font-bold;
+        }
+        .content-wrapper :where(ul) {
+          @apply list-disc list-outside ml-5 mb-8 space-y-3 text-lg font-bold;
+        }
+        .content-wrapper :where(ol) {
+          @apply list-decimal list-outside ml-5 mb-8 space-y-3 text-lg font-bold;
+        }
+        .content-wrapper :where(li) {
+          @apply pl-2;
+        }
+        .content-wrapper :where(strong) {
+          @apply font-black;
+        }
+        .content-wrapper :where(a) {
+          @apply underline underline-offset-4 decoration-4 decoration-black/20 dark:decoration-white/20 hover:decoration-black dark:hover:decoration-white transition-all;
+        }
+        .content-wrapper :where(blockquote) {
+          @apply border-l-4 border-black dark:border-white pl-6 italic font-bold my-10;
+        }
+      </style>
+      <Content />
+    </div>
+
+    <!-- Tags -->
+    {entry.data.tags && entry.data.tags.length > 0 && (
+      <div class="mt-20 pt-10 border-t-2 border-black dark:border-white">
+        <div class="flex flex-wrap gap-2">
+          {entry.data.tags.map((tag) => (
+            <span class="text-[10px] font-black text-black dark:text-white uppercase tracking-widest border-2 border-black dark:border-white px-3 py-1">{tag}</span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Navigation -->
+    <div class="mt-20 pt-10 border-t-2 border-black dark:border-white text-center">
+      <a href={`/learning/${topicId}`} class="text-xs font-black tracking-widest uppercase text-black dark:text-white opacity-40 hover:opacity-100 transition-all underline underline-offset-4 decoration-2">
+        &larr; Back to {topicName}
+      </a>
+    </div>
+
+  </article>
+</BaseLayout>

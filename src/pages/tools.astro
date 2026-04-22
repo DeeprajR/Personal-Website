@@ -6,10 +6,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
     
     <header class="mb-16">
-      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-gray-100">
+      <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-4 text-black dark:text-white uppercase">
         Tools
       </h1>
-      <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed">
+      <p class="text-lg text-black dark:text-white font-bold max-w-2xl leading-relaxed">
         A personal set of lightweight utilities I keep coming back to. No sign-ups, no tracking, no bloat.
       </p>
     </header>
@@ -20,17 +20,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <!-- ═══════════════════════════════════════════════ -->
         <!-- TOOL 1: Book Details Retriever (Writing)        -->
         <!-- ═══════════════════════════════════════════════ -->
-        <section id="book-retriever" class="tool-section">
-          <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+        <section id="book-retriever" class="tool-section group">
+          <button class="tool-card w-full text-left p-6 md:p-8 transition-all duration-300 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black">
 
             <div class="flex-1">
               <div class="flex items-center gap-3 mb-2">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Book Details Retriever</h2>
+                <h2 class="text-xl font-black uppercase tracking-tight">Book Details Retriever</h2>
               </div>
-              <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Fetch book metadata and Open Library covers for your library frontmatter.</p>
+              <p class="text-sm font-bold group-hover:opacity-100 transition-all">Fetch book metadata and Open Library covers for your library frontmatter.</p>
             </div>
-            <div class="mt-4 opacity-20 group-hover:opacity-100 transition-opacity self-end">
-              <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+            <div class="mt-4 opacity-40 group-hover:opacity-100 transition-all self-end">
+              <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
             </div>
           </button>
           
@@ -39,10 +39,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <div class="space-y-6">
               <div class="flex flex-col sm:flex-row gap-3">
                 <div class="flex-1">
-                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">ISBN Number</label>
+                  <label class="block text-[10px] font-black text-black dark:text-white uppercase tracking-widest mb-2">ISBN Number</label>
                   <input id="isbn-input" type="text" maxlength="17" placeholder="e.g. 9780307886231"
-                    class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400" />
-                  <p id="isbn-error" class="text-xs text-red-500 font-mono mt-2 hidden"></p>
+                    class="w-full border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:bg-gray-50 dark:focus:bg-gray-950 focus:outline-none placeholder:text-black/30 dark:placeholder:text-white/30" />
+                  <p id="isbn-error" class="text-xs text-red-600 font-black font-mono mt-2 hidden"></p>
                 </div>
                 <div class="flex items-end">
                   <button id="isbn-fetch" class="w-full sm:w-auto px-8 py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer whitespace-nowrap">
@@ -52,26 +52,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               </div>
 
               <!-- Loading state -->
-              <div id="isbn-loading" class="hidden text-xs font-mono text-gray-400 dark:text-gray-500 animate-pulse">Fetching from Open Library...</div>
+              <div id="isbn-loading" class="hidden text-xs font-mono font-black text-black dark:text-white animate-pulse uppercase tracking-widest">Fetching from Open Library...</div>
 
               <!-- Preview + Output -->
               <div id="isbn-result" class="hidden space-y-6">
-                <div id="isbn-preview" class="flex gap-4 p-4 border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20">
-                  <img id="isbn-cover" src="" alt="Cover" class="w-14 h-20 object-cover border border-gray-200 dark:border-gray-700 shrink-0" />
+                <div id="isbn-preview" class="flex gap-4 p-4 border-2 border-black dark:border-white bg-gray-50/50 dark:bg-gray-950/20">
+                  <img id="isbn-cover" src="" alt="Cover" class="w-14 h-20 object-cover border-2 border-black dark:border-white shrink-0" />
                   <div>
-                    <p id="isbn-book-title" class="font-bold text-gray-900 dark:text-white text-sm"></p>
-                    <p id="isbn-book-author" class="text-xs text-gray-500 dark:text-gray-400 mt-1"></p>
-                    <p id="isbn-book-genres" class="text-[10px] text-gray-400 dark:text-gray-500 font-mono mt-2 uppercase tracking-wider"></p>
+                    <p id="isbn-book-title" class="font-black text-black dark:text-white text-sm uppercase tracking-tight"></p>
+                    <p id="isbn-book-author" class="text-xs text-black dark:text-white font-bold mt-1"></p>
+                    <p id="isbn-book-genres" class="text-[10px] text-black dark:text-white font-black font-mono mt-2 uppercase tracking-widest"></p>
                   </div>
                 </div>
                 <div>
                   <div class="flex justify-between items-center mb-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Frontmatter Output</label>
-                    <button id="isbn-copy" class="text-[10px] font-bold tracking-widest uppercase text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer">Copy HTML →</button>
+                    <label class="text-[10px] font-black text-black dark:text-white uppercase tracking-widest">Frontmatter Output</label>
+                    <button id="isbn-copy" class="text-[10px] font-black tracking-widest uppercase text-black dark:text-white hover:underline transition-all cursor-pointer">Copy HTML →</button>
                   </div>
                   <textarea id="isbn-output" rows="8" readonly
-                    class="w-full border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 text-gray-900 dark:text-white px-4 py-3 text-xs font-mono focus:outline-none resize-none"></textarea>
-                  <p id="isbn-copy-status" class="text-[10px] font-mono text-green-600 dark:text-green-400 mt-2 hidden">✓ Copied to clipboard</p>
+                    class="w-full border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-4 py-3 text-xs font-mono focus:outline-none resize-none font-bold"></textarea>
+                  <p id="isbn-copy-status" class="text-[10px] font-black font-mono text-emerald-600 dark:text-emerald-400 mt-2 hidden uppercase tracking-widest">✓ Copied to clipboard</p>
                 </div>
               </div>
             </div>
@@ -80,40 +80,40 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </section>
 
       <!-- TOOL 2: Markdown Table Generator (Writing) -->
-      <section id="markdown-table" class="tool-section">
-        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+      <section id="markdown-table" class="tool-section group">
+        <button class="tool-card w-full text-left p-6 md:p-8 transition-all duration-300 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black">
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Markdown Table Generator</h2>
+              <h2 class="text-xl font-black uppercase tracking-tight">Markdown Table Generator</h2>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Convert CSV or spreadsheet data into Markdown tables instantly.</p>
+            <p class="text-sm font-bold group-hover:opacity-100 transition-all">Convert CSV or spreadsheet data into Markdown tables instantly.</p>
           </div>
-          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
-            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+          <div class="mt-4 opacity-40 group-hover:opacity-100 transition-all self-end">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
           </div>
         </button>
 
-        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-black dark:border-white">
           <div class="max-w-xl">
             <div class="space-y-6">
               <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Input Data (CSV or Tab-separated)</label>
-                <textarea id="md-table-input" rows="5" placeholder="Name, Role, Location&#10;Alice, PM, London" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none placeholder:text-gray-400 resize-none"></textarea>
+                <label class="block text-[10px] font-black text-black dark:text-white uppercase tracking-widest mb-2">Input Data (CSV or Tab-separated)</label>
+                <textarea id="md-table-input" rows="5" placeholder="Name, Role, Location&#10;Alice, PM, London" class="w-full border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-4 py-3 text-sm font-mono font-bold transition-colors focus:bg-gray-50 dark:focus:bg-gray-950 focus:outline-none placeholder:text-black/30 dark:placeholder:text-white/30 resize-none"></textarea>
               </div>
               <div class="flex flex-col sm:flex-row items-center gap-4">
                 <label class="flex items-center gap-3 cursor-pointer group w-full sm:w-auto">
                   <input type="checkbox" id="md-table-header" checked class="w-4 h-4 accent-black dark:accent-white" />
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Use first row as header</span>
+                  <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white group-hover:opacity-100 transition-all">Use first row as header</span>
                 </label>
                 <button id="md-table-gen" class="w-full sm:flex-1 py-3.5 border-2 border-black dark:border-white text-[11px] font-black uppercase tracking-[0.2em] bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all cursor-pointer">Generate Table</button>
               </div>
               <div>
                 <div class="flex justify-between items-center mb-2">
-                  <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Markdown Output</label>
-                  <button id="md-table-copy" class="text-[10px] font-bold tracking-widest uppercase text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer">Copy Table →</button>
+                  <label class="text-[10px] font-black text-black dark:text-white uppercase tracking-widest">Markdown Output</label>
+                  <button id="md-table-copy" class="text-[10px] font-black tracking-widest uppercase text-black dark:text-white hover:underline transition-all cursor-pointer">Copy Table →</button>
                 </div>
-                <textarea id="md-table-output" rows="6" readonly placeholder="Markdown will appear here..." class="w-full border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 text-gray-900 dark:text-white px-4 py-3 text-xs font-mono focus:outline-none resize-none"></textarea>
-                <p id="md-table-status" class="text-[10px] font-mono text-green-600 dark:text-green-400 mt-2 hidden">✓ Copied to clipboard</p>
+                <textarea id="md-table-output" rows="6" readonly placeholder="Markdown will appear here..." class="w-full border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-4 py-3 text-xs font-mono font-bold focus:outline-none resize-none"></textarea>
+                <p id="md-table-status" class="text-[10px] font-black font-mono text-emerald-600 dark:text-emerald-400 mt-2 hidden uppercase tracking-widest">✓ Copied to clipboard</p>
               </div>
             </div>
           </div>
@@ -121,61 +121,61 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </section>
 
       <!-- TOOL 3: Password Generator (Developer) -->
-      <section id="password-generator" class="tool-section">
-        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+      <section id="password-generator" class="tool-section group">
+        <button class="tool-card w-full text-left p-6 md:p-8 transition-all duration-300 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black">
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Password Generator</h2>
+              <h2 class="text-xl font-black uppercase tracking-tight">Password Generator</h2>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Generate secure, random passwords locally using cryptographically strong random values.</p>
+            <p class="text-sm font-bold group-hover:opacity-100 transition-all">Generate secure, random passwords locally using cryptographically strong random values.</p>
           </div>
-          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
-            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+          <div class="mt-4 opacity-40 group-hover:opacity-100 transition-all self-end">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
           </div>
         </button>
 
-        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-black dark:border-white">
           <div class="max-w-xl">
             <div class="space-y-8">
               <div>
                 <div class="flex justify-between items-center mb-4">
-                  <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Password Length: <span id="pw-length-val" class="text-gray-900 dark:text-white font-mono ml-2">16</span></label>
+                  <label class="text-[10px] font-black text-black dark:text-white uppercase tracking-widest">Password Length: <span id="pw-length-val" class="text-black dark:text-white font-black font-mono ml-2">16</span></label>
                 </div>
-                <input id="pw-length" type="range" min="8" max="64" value="16" class="w-full h-1.5 bg-gray-200 dark:bg-gray-800 rounded-none appearance-none cursor-pointer accent-black dark:accent-white" />
+                <input id="pw-length" type="range" min="8" max="64" value="16" class="w-full h-2 bg-black/10 dark:bg-white/10 rounded-none appearance-none cursor-pointer accent-black dark:accent-white" />
               </div>
 
               <div class="grid grid-cols-2 gap-4">
                 <label class="flex items-center gap-3 cursor-pointer group">
-                  <input type="checkbox" id="pw-upper" checked class="w-4 h-4 rounded-none border-gray-300 dark:border-gray-700 text-black dark:text-white focus:ring-black dark:focus:ring-white accent-black dark:accent-white" />
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Uppercase</span>
+                  <input type="checkbox" id="pw-upper" checked class="w-4 h-4 rounded-none border-2 border-black dark:border-white text-black dark:text-white accent-black dark:accent-white" />
+                  <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white group-hover:opacity-100 transition-all">Uppercase</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
-                  <input type="checkbox" id="pw-lower" checked class="w-4 h-4 rounded-none border-gray-300 dark:border-gray-700 text-black dark:text-white focus:ring-black dark:focus:ring-white accent-black dark:accent-white" />
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Lowercase</span>
+                  <input type="checkbox" id="pw-lower" checked class="w-4 h-4 rounded-none border-2 border-black dark:border-white text-black dark:text-white accent-black dark:accent-white" />
+                  <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white group-hover:opacity-100 transition-all">Lowercase</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
-                  <input type="checkbox" id="pw-numbers" checked class="w-4 h-4 rounded-none border-gray-300 dark:border-gray-700 text-black dark:text-white focus:ring-black dark:focus:ring-white accent-black dark:accent-white" />
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Numbers</span>
+                  <input type="checkbox" id="pw-numbers" checked class="w-4 h-4 rounded-none border-2 border-black dark:border-white text-black dark:text-white accent-black dark:accent-white" />
+                  <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white group-hover:opacity-100 transition-all">Numbers</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
-                  <input type="checkbox" id="pw-symbols" class="w-4 h-4 rounded-none border-gray-300 dark:border-gray-700 text-black dark:text-white focus:ring-black dark:focus:ring-white accent-black dark:accent-white" />
-                  <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Special</span>
+                  <input type="checkbox" id="pw-symbols" class="w-4 h-4 rounded-none border-2 border-black dark:border-white text-black dark:text-white accent-black dark:accent-white" />
+                  <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white group-hover:opacity-100 transition-all">Special</span>
                 </label>
               </div>
 
               <div class="space-y-4">
                 <div class="relative group">
                   <input id="pw-output" type="text" readonly 
-                    class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-4 text-lg font-mono tracking-wider focus:outline-none" />
+                    class="w-full border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-4 py-4 text-lg font-mono font-black tracking-wider focus:outline-none" />
                   <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                    <button id="pw-refresh" class="p-2 text-gray-400 hover:text-black dark:hover:text-white transition-colors" title="Regenerate">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    <button id="pw-refresh" class="p-2 text-black dark:text-white opacity-40 hover:opacity-100 transition-all" title="Regenerate">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                     </button>
-                    <div class="w-px h-4 bg-gray-200 dark:bg-gray-800 mx-1"></div>
-                    <button id="pw-copy-btn" class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-black dark:hover:text-white transition-all">Copy</button>
+                    <div class="w-px h-4 bg-black/10 dark:bg-white/10 mx-1"></div>
+                    <button id="pw-copy-btn" class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-black dark:text-white hover:underline transition-all">Copy</button>
                   </div>
                 </div>
-                <p id="pw-status" class="text-[10px] text-center font-mono text-green-600 dark:text-green-400 uppercase tracking-widest hidden">✓ Securely copied to clipboard</p>
+                <p id="pw-status" class="text-[10px] text-center font-black font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-widest hidden">✓ Securely copied to clipboard</p>
               </div>
             </div>
           </div>
@@ -184,28 +184,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 
       <!-- TOOL 4: Image Converter (Media) -->
-      <section id="image-converter" class="tool-section">
-        <button class="tool-card group relative w-full text-left p-6 md:p-8 transition-all duration-300">
+      <section id="image-converter" class="tool-section group">
+        <button class="tool-card w-full text-left p-6 md:p-8 transition-all duration-300 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black">
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-tight">Image Converter</h2>
+              <h2 class="text-xl font-black uppercase tracking-tight">Image Converter</h2>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">Offline, secure batch image conversion to WebP, PNG, or JPEG.</p>
+            <p class="text-sm font-bold group-hover:opacity-100 transition-all">Offline, secure batch image conversion to WebP, PNG, or JPEG.</p>
           </div>
-          <div class="ml-4 opacity-20 group-hover:opacity-100 transition-opacity">
-            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+          <div class="mt-4 opacity-40 group-hover:opacity-100 transition-all self-end">
+            <svg class="w-5 h-5 transition-transform duration-300 transform group-aria-expanded:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
           </div>
         </button>
 
-        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-gray-50 dark:border-gray-800/50">
+        <div class="tool-content hidden opacity-0 transition-opacity duration-300 p-6 md:p-8 pt-0 border-t border-black dark:border-white">
           <div class="max-w-xl">
             <div class="space-y-6">
               <!-- Drop Zone -->
-              <div id="drop-zone" class="border-2 border-dashed border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 p-12 text-center transition-all group-hover:bg-gray-100 dark:group-hover:bg-gray-800/40">
+              <div id="drop-zone" class="border-2 border-dashed border-black/10 dark:border-white/10 bg-white dark:bg-black p-12 text-center transition-all hover:border-black dark:hover:border-white">
                 <input type="file" id="img-input" multiple accept="image/*" class="hidden" />
                 <label for="img-input" class="cursor-pointer">
-                  <svg class="w-8 h-8 mx-auto text-gray-300 dark:text-gray-700 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                  <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Drop images here or <span class="text-black dark:text-white underline underline-offset-4">browse</span></p>
+                  <svg class="w-8 h-8 mx-auto text-black dark:text-white opacity-20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  <p class="text-xs font-black text-black dark:text-white uppercase tracking-widest">Drop images here or <span class="underline underline-offset-4">browse</span></p>
                 </label>
               </div>
 
@@ -213,8 +213,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <div id="img-options" class="hidden space-y-4 animate-in fade-in slide-in-from-top-2">
                 <div class="flex flex-col sm:flex-row items-center gap-4">
                   <div class="flex-1 w-full">
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Target Format</label>
-                    <select id="img-format" class="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-3 text-sm font-mono transition-colors focus:border-black dark:focus:border-white focus:outline-none cursor-pointer">
+                    <label class="block text-[10px] font-black text-black dark:text-white uppercase tracking-widest mb-2">Target Format</label>
+                    <select id="img-format" class="w-full border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-4 py-3 text-sm font-mono font-bold transition-colors focus:bg-gray-50 dark:focus:bg-gray-950 focus:outline-none cursor-pointer">
                       <option value="image/webp" selected>WEB P (Best Quality)</option>
                       <option value="image/png">P N G</option>
                       <option value="image/jpeg">J P E G</option>
@@ -470,43 +470,68 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const imgOptions = document.getElementById('img-options');
     let convertedFiles = [];
     let currentInputFiles = [];
+    let objectUrls = [];
 
     async function handleFiles(files) {
       if (files.length === 0) return;
       currentInputFiles = files;
+      
+      // Cleanup previous URLs
+      objectUrls.forEach(url => URL.revokeObjectURL(url));
+      objectUrls = [];
+      
       imgList.innerHTML = '';
       convertedFiles = [];
       convertAllBtn.disabled = true;
       imgOptions.classList.remove('hidden');
 
+      const targetFormatLabel = imgFormatSelect.options[imgFormatSelect.selectedIndex].text.split('(')[0].trim();
+
       for (const file of files) {
         if (!file.type.startsWith('image/')) continue;
 
         const card = document.createElement('div');
-        card.className = 'p-4 border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-2';
+        card.className = 'p-4 border-2 border-black dark:border-white bg-white dark:bg-black flex items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-2';
         card.innerHTML = `
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-bold text-gray-900 dark:text-white truncate">${file.name}</p>
-            <p class="text-[10px] text-gray-400 uppercase tracking-widest">${(file.size / 1024).toFixed(1)} KB</p>
+            <p class="file-name text-sm font-black text-black dark:text-white truncate uppercase tracking-tight">${file.name}</p>
+            <div class="flex items-center gap-2 mt-1">
+              <p class="file-size text-[10px] text-black dark:text-white font-black font-mono uppercase tracking-widest">${(file.size / 1024).toFixed(1)} KB</p>
+              <span class="text-[10px] text-black dark:text-white opacity-20">|</span>
+              <p class="conversion-status text-[10px] text-emerald-500 font-black uppercase tracking-widest animate-pulse">Converting to ${targetFormatLabel}...</p>
+            </div>
           </div>
           <div class="flex items-center gap-3">
-            <div class="status-indicator w-2 h-2 rounded-full bg-gray-300 animate-pulse"></div>
+            <div class="status-indicator w-2.5 h-2.5 rounded-full bg-black/10 dark:bg-white/10 animate-pulse"></div>
             <button class="download-btn hidden px-4 py-2 border-2 border-black dark:border-white text-[10px] font-black uppercase tracking-widest bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">Save</button>
           </div>
         `;
         imgList.appendChild(card);
 
         try {
-          const blob = await convertImage(file, imgFormatSelect.value);
-          const extension = imgFormatSelect.value.split('/')[1];
+          const targetType = imgFormatSelect.value;
+          const blob = await convertImage(file, targetType);
+          const extension = targetType.split('/')[1];
           const newName = file.name.split('.')[0] + '.' + (extension === 'jpeg' ? 'jpg' : extension);
           const url = URL.createObjectURL(blob);
+          objectUrls.push(url);
           
           convertedFiles.push({ url, name: newName });
           
           const indicator = card.querySelector('.status-indicator');
           indicator.classList.remove('bg-gray-300', 'animate-pulse');
           indicator.classList.add('bg-green-500');
+
+          // Update UI with converted details
+          const nameEl = card.querySelector('.file-name');
+          const sizeEl = card.querySelector('.file-size');
+          const statusEl = card.querySelector('.conversion-status');
+          
+          nameEl.textContent = newName;
+          sizeEl.textContent = `${(blob.size / 1024).toFixed(1)} KB`;
+          statusEl.textContent = 'Ready';
+          statusEl.classList.remove('animate-pulse', 'text-emerald-500');
+          statusEl.classList.add('text-black', 'dark:text-white');
           
           const btn = card.querySelector('.download-btn');
           btn.classList.remove('hidden');
@@ -521,6 +546,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           const indicator = card.querySelector('.status-indicator');
           indicator.classList.remove('bg-gray-300', 'animate-pulse');
           indicator.classList.add('bg-red-500');
+          card.querySelector('.conversion-status').textContent = 'Error';
+          card.querySelector('.conversion-status').classList.remove('text-emerald-500', 'animate-pulse');
+          card.querySelector('.conversion-status').classList.add('text-red-500');
         }
       }
 
@@ -651,32 +679,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     .tool-section {
       scroll-margin-top: 100px;
-      background: rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      border-radius: 1.5rem;
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 0;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       overflow: hidden;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
-
+    
     :global(.dark) .tool-section {
-      background: rgba(17, 24, 39, 0.8);
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      background: #000000;
+      border-color: #ffffff;
     }
 
     .tool-section:hover {
-      background: rgba(255, 255, 255, 0.8);
-      border-color: rgba(0, 0, 0, 0.1);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      background: #ffffff;
+      transform: translate(-4px, -4px);
+      box-shadow: 8px 8px 0px 0px #000000;
+    }
+    
+    .tool-section:hover .tool-card {
+      background: #000000;
+      color: #ffffff;
     }
 
     :global(.dark) .tool-section:hover {
-      background: rgba(17, 24, 39, 0.95);
-      border-color: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+      background: #000000;
+      box-shadow: 8px 8px 0px 0px #ffffff;
+    }
+
+    :global(.dark) .tool-section:hover .tool-card {
+      background: #ffffff;
+      color: #000000;
     }
 
     .tool-section.is-active {
@@ -684,16 +717,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       overflow: visible !important;
       height: auto !important;
       background: #ffffff !important;
-      border-color: rgba(0, 0, 0, 0.1);
-      transform: translateY(0);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      transform: translate(0) !important;
+      box-shadow: none !important;
       animation: expand-row 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     :global(.dark) .tool-section.is-active {
-      background: #0f172a !important;
-      border-color: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      background: #000000 !important;
     }
 
     /* Centering the 7th item if it's alone in a 3-column grid */

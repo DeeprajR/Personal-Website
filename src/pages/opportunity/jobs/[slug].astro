@@ -1,0 +1,115 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const jobEntries = await getCollection('jobs');
+  return jobEntries.map(entry => ({
+    params: { slug: entry.id.replace(/\.[^/.]+$/, "") },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+// Email constants
+const CONTACT_EMAIL = "hello@deeprajr.com";
+---
+
+<BaseLayout title={`${entry.data.title} | Opportunity Board`}>
+  <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+    
+    <div class="mb-24 border-b-2 border-black dark:border-white pb-16">
+      <a href="/opportunity" class="text-[10px] font-black tracking-widest uppercase text-black dark:text-white hover:opacity-100 mb-12 inline-block transition-all underline decoration-2 underline-offset-4">&larr; Back to Board</a>
+      
+      <div class="flex items-center gap-3 mb-6 flex-wrap">
+        {entry.data.status === 'expired' && (
+          <span class="text-[10px] font-black uppercase tracking-widest bg-black dark:bg-white text-white dark:text-black px-3 py-1 border-2 border-black dark:border-white">
+            Expired
+          </span>
+        )}
+        <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white border-2 border-black dark:border-white px-3 py-1">
+          {entry.data.workMode}
+        </span>
+        <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white border-2 border-black dark:border-white px-3 py-1">
+          {entry.data.employmentType}
+        </span>
+        {entry.data.location && (
+          <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white border-2 border-black dark:border-white px-3 py-1">
+            {entry.data.location}
+          </span>
+        )}
+        {entry.data.salary && (
+          <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white border-2 border-black dark:border-white px-3 py-1">
+            {entry.data.salary}
+          </span>
+        )}
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-black tracking-tighter text-black dark:text-white mb-4 leading-none uppercase">
+        {entry.data.title}
+      </h1>
+      <p class="text-2xl font-bold text-black dark:text-white mb-12 tracking-tight uppercase">{entry.data.company}</p>
+
+      <div class="flex flex-wrap gap-2 mb-16">
+        {entry.data.skills.map(skill => (
+          <span class="text-[10px] font-black text-black dark:text-white uppercase tracking-widest border-2 border-black dark:border-white px-4 py-1.5 bg-transparent">
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-6 pt-12 border-t-2 border-black dark:border-white">
+        {entry.data.status === 'active' ? (
+          <a href={`mailto:${CONTACT_EMAIL}?subject=Referral Request: ${entry.data.title} at ${entry.data.company}`} 
+            class="inline-flex justify-center items-center px-10 py-5 border-2 border-black dark:border-white text-[10px] font-black tracking-widest uppercase bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] active:shadow-none translate-y-[-2px]">
+            Get Referred
+          </a>
+        ) : (
+          <div class="inline-flex justify-center items-center px-10 py-5 border-2 border-black dark:border-white bg-transparent text-[10px] font-black tracking-widest uppercase text-black dark:text-white cursor-not-allowed">
+            Position Closed
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="content-wrapper prose prose-neutral dark:prose-invert max-w-none">
+      <style is:global>
+        @reference "tailwindcss";
+        .content-wrapper h2 {
+          @apply text-2xl font-black text-black dark:text-white mt-12 mb-6 uppercase tracking-tight;
+        }
+        .content-wrapper h3 {
+          @apply text-xl font-black text-black dark:text-white mt-8 mb-4 uppercase tracking-tight;
+        }
+        .content-wrapper p {
+          @apply text-base text-black dark:text-white leading-relaxed mb-6 font-bold;
+        }
+        .content-wrapper ul {
+          @apply list-disc list-outside ml-5 mb-8 space-y-2 text-black dark:text-white font-bold;
+        }
+        .content-wrapper li {
+          @apply pl-1;
+        }
+        .content-wrapper strong {
+          @apply font-black text-black dark:text-white;
+        }
+      </style>
+      <Content />
+    </div>
+
+    {entry.data.status === 'active' && (
+      <div class="mt-32 p-10 bg-white dark:bg-black border-2 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]">
+        <h3 class="text-2xl font-black text-black dark:text-white mb-4 tracking-tighter uppercase">Interested in this role?</h3>
+        <p class="text-sm text-black dark:text-white font-bold mb-8 leading-relaxed max-w-2xl">
+          I can help facilitate an introduction. Click the button below to send me an email with your profile and any relevant context.
+        </p>
+        <a href={`mailto:${CONTACT_EMAIL}?subject=Referral Request: ${entry.data.title} at ${entry.data.company}`} class="inline-flex justify-center items-center px-10 py-5 border-2 border-black dark:border-white text-[10px] font-black tracking-widest uppercase bg-black dark:bg-white text-white dark:text-black hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all w-full sm:w-auto shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] active:shadow-none translate-y-[-2px]">
+          Get Referred
+        </a>
+      </div>
+    )}
+
+  </article>
+</BaseLayout>

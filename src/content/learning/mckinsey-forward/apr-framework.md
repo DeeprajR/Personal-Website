@@ -1,9 +1,8 @@
 ---
 title: "APR - Awareness, Pause, and Reframe"
-hook: "The APR framework is a simple yet powerful tool for improving decision-making and execution. It consists of three steps"
+hook: "The APR framework is a simple yet powerful tool for improving decision-making and execution. It consists of three steps."
 date: 2026-03-23
-tags: ["Learnings"]
-categories: ["Adaptability and Resilience"]
+tags: ["Frameworks", "Decision Making"]
 ---
 
 ### The APR Framework
@@ -54,4 +53,3 @@ When you are in doubt, use the questions below to shift your mindset to a positi
 - Audit your team's top 3 initiatives this week. 
 - Ask yourselves: are we measuring the effort it takes to build this, or the value it creates? 
 - If you can't clearly articulate the expected outcome, hit pause until you can.
-

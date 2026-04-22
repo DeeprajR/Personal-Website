@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));@theme {
-  --color-brand-black: #0com0000;
+  --color-brand-black: #000000;
   --color-brand-white: #ffffff;
   --color-brand-gray-50: #f9fafb;
   --color-brand-gray-100: #f3f4f6;
@@ -23,11 +23,40 @@
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
   }
+
+  /* Prose Overrides */
+  --tw-prose-body: var(--color-brand-black);
+  --tw-prose-headings: var(--color-brand-black);
+  --tw-prose-links: var(--color-brand-black);
+  --tw-prose-bold: var(--color-brand-black);
+  --tw-prose-counters: var(--color-brand-black);
+  --tw-prose-bullets: var(--color-brand-black);
+  --tw-prose-hr: var(--color-brand-black);
+  --tw-prose-quotes: var(--color-brand-black);
+  --tw-prose-quote-borders: var(--color-brand-black);
+  --tw-prose-captions: var(--color-brand-black);
+  --tw-prose-code: var(--color-brand-black);
+  --tw-prose-th-borders: var(--color-brand-black);
+  --tw-prose-td-borders: var(--color-brand-black);
+
+  --tw-prose-invert-body: var(--color-brand-white);
+  --tw-prose-invert-headings: var(--color-brand-white);
+  --tw-prose-invert-links: var(--color-brand-white);
+  --tw-prose-invert-bold: var(--color-brand-white);
+  --tw-prose-invert-counters: var(--color-brand-white);
+  --tw-prose-invert-bullets: var(--color-brand-white);
+  --tw-prose-invert-hr: var(--color-brand-white);
+  --tw-prose-invert-quotes: var(--color-brand-white);
+  --tw-prose-invert-quote-borders: var(--color-brand-white);
+  --tw-prose-invert-captions: var(--color-brand-white);
+  --tw-prose-invert-code: var(--color-brand-white);
+  --tw-prose-invert-th-borders: var(--color-brand-white);
+  --tw-prose-invert-td-borders: var(--color-brand-white);
 }
 
 @layer base {
   body {
-    @apply bg-brand-white text-brand-black font-sans antialiased;
+    @apply bg-brand-white text-black dark:bg-black dark:text-white font-sans antialiased;
   }
   a, button {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-gray-900 dark:focus-visible:ring-brand-white;

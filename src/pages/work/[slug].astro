@@ -18,43 +18,43 @@ const { Content } = await render(entry);
   <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
     
     <div class="mb-16">
-      <a href="/work" class="text-sm font-bold tracking-widest uppercase text-gray-400 hover:text-black mb-8 inline-block transition-colors">&larr; Back to Work</a>
-      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-6 leading-tight">
+      <a href="/work" class="text-xs font-black tracking-widest uppercase text-black dark:text-white opacity-40 hover:opacity-100 mb-8 inline-block transition-all underline underline-offset-4 decoration-2">&larr; Back to Work</a>
+      <h1 class="text-3xl md:text-5xl font-black tracking-tighter text-black dark:text-white mb-6 leading-none uppercase">
         {entry.data.title}
       </h1>
-      <div class="flex flex-col md:flex-row gap-8 py-8 border-y border-gray-100">
+      <div class="flex flex-col md:flex-row gap-8 py-8 border-y-2 border-black dark:border-white">
         {entry.data.description && (
-          <p class="text-sm font-medium text-gray-700 leading-relaxed">{entry.data.description}</p>
+          <p class="text-base font-bold text-black dark:text-white leading-relaxed">{entry.data.description}</p>
         )}
       </div>
 
     </div>
 
-    <div class="content-wrapper prose prose-gray max-w-none">
+    <div class="content-wrapper prose dark:prose-invert max-w-none mx-auto">
       <style is:global>
         @reference "tailwindcss";
-        .content-wrapper h3 {
-          @apply text-xl font-bold text-gray-900 mt-12 mb-4 border-b border-gray-100 pb-2;
+        .content-wrapper :where(h3) {
+          @apply text-xl font-black mt-12 mb-4 border-b-2 border-black dark:border-white pb-2 uppercase tracking-tight;
         }
-        .content-wrapper p {
-          @apply text-base text-gray-700 leading-relaxed mb-6 font-medium;
+        .content-wrapper :where(p) {
+          @apply text-base leading-relaxed mb-6 font-bold;
         }
-        .content-wrapper ul {
-          @apply list-disc list-outside ml-5 mb-8 space-y-2 text-gray-700 font-medium;
+        .content-wrapper :where(ul) {
+          @apply list-disc list-outside ml-5 mb-8 space-y-2 font-bold;
         }
-        .content-wrapper li {
+        .content-wrapper :where(li) {
           @apply pl-1;
         }
-        .content-wrapper strong {
-          @apply font-bold text-black;
+        .content-wrapper :where(strong) {
+          @apply font-black;
         }
       </style>
       <Content />
     </div>
 
-    <div class="mt-24 pt-8 border-t border-gray-100 text-center">
-      <h3 class="text-xl font-bold text-gray-900 mb-6">Need similar leverage in your organization?</h3>
-      <a href="mailto:hello@deeprajr.com" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-sm font-bold tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-colors">
+    <div class="mt-24 pt-12 border-t-2 border-black dark:border-white text-center">
+      <h3 class="text-xl font-black text-black dark:text-white mb-8 uppercase tracking-widest">Need similar leverage?</h3>
+      <a href="mailto:hello@deeprajr.com" class="inline-flex justify-center items-center px-8 py-4 border-2 border-black dark:border-white text-sm font-black tracking-[0.2em] uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all">
         Let's Talk
       </a>
     </div>

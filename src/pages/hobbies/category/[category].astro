@@ -31,32 +31,32 @@ const { categoryName, posts } = Astro.props;
 
 <BaseLayout title={`${categoryName} | Deepraj R`} description={`Articles and explorations in ${categoryName}.`}>
   <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
-    <div class="mb-16">
-      <a href="/hobbies" class="text-sm font-bold tracking-widest uppercase text-gray-400 hover:text-black dark:text-gray-500 dark:hover:text-white mb-12 inline-block transition-colors">&larr; Back to Hobbies</a>
-      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-gray-900 dark:text-gray-100">
+    <div class="mb-20 pb-12 border-b-2 border-black dark:border-white">
+      <a href="/hobbies" class="text-xs font-black tracking-widest uppercase text-black dark:text-white opacity-40 hover:opacity-100 mb-12 inline-block transition-all underline underline-offset-4 decoration-2">&larr; Back to Hobbies</a>
+      <h1 class="text-4xl md:text-5xl font-black tracking-tighter mb-6 text-black dark:text-white uppercase">
         {categoryName}
       </h1>
-      <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed">
+      <p class="text-lg text-black dark:text-white font-bold opacity-70 max-w-2xl leading-relaxed">
         Showing {posts.length} {posts.length === 1 ? 'article' : 'articles'} in this collection.
       </p>
     </div>
 
-    <div class="space-y-0 border-t border-gray-100 dark:border-gray-800">
+    <div class="space-y-8">
       {posts.map((post) => (
-        <article class="group relative py-12 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/30 px-6 -mx-6 transition-colors">
-          <a href={`/hobbies/${post.id}`} class="block z-10">
-            <time class="text-sm font-bold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-3 block font-mono">
+        <article class="group relative bg-white dark:bg-black border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] transition-all overflow-hidden">
+          <a href={`/hobbies/${post.id}`} class="block p-10 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all">
+            <time class="text-[10px] font-black uppercase tracking-widest mb-4 opacity-40 group-hover:opacity-100 transition-all">
               {post.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </time>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-black dark:group-hover:text-white mb-3 transition-colors tracking-tight">
+            <h3 class="text-2xl md:text-3xl font-black mb-4 transition-all tracking-tighter uppercase leading-none">
               {post.data.title}
             </h3>
-            <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-6 max-w-3xl">
+            <p class="text-lg font-bold opacity-70 group-hover:opacity-100 leading-relaxed mb-8 max-w-3xl transition-all">
               {post.data.hook}
             </p>
             <div class="flex flex-wrap gap-2">
               {post.data.tags?.map((tag: string) => (
-                <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest border border-gray-200 dark:border-gray-800 px-3 py-1 bg-white dark:bg-gray-950">
+                <span class="text-[10px] font-black uppercase tracking-widest border-2 border-black dark:border-white group-hover:border-white dark:group-hover:border-black px-3 py-1 transition-all">
                   {tag}
                 </span>
               ))}

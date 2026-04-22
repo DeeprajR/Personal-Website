@@ -6,32 +6,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <div class="h-[80vh] w-full flex flex-col items-center justify-center text-center overflow-hidden">
     
     <!-- Condensed Header Block -->
-    <h1 class="text-4xl md:text-5xl font-black uppercase tracking-widest text-gray-900 dark:text-white mb-2 leading-none">
+    <h1 class="text-4xl md:text-5xl font-black uppercase tracking-widest text-black dark:text-white mb-2 leading-none">
       404
     </h1>
-    <p class="text-sm md:text-base text-gray-500 dark:text-gray-400 mb-6 max-w-sm px-4">
+    <p class="text-sm md:text-base text-black dark:text-white font-bold mb-6 max-w-sm px-4">
       This page doesn't exist. Play a quick game or head back home.
     </p>
 
     <!-- TRULY SMALL & CENTERED Game Container (Fixed 240x240) -->
-    <div class="relative w-[240px] h-[240px] border-4 border-black dark:border-gray-800 bg-gray-50 dark:bg-gray-950 shadow-lg touch-none mx-auto mb-6 shrink-0 rounded-md overflow-hidden">
+    <div class="relative w-[240px] h-[240px] border-4 border-black dark:border-white bg-white dark:bg-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] touch-none mx-auto mb-10 shrink-0 overflow-hidden">
       <!-- Logic canvas shrunk geometrically and mapped to 15x15 pixel grids -->
       <canvas id="gameCanvas" width="240" height="240" class="w-full h-full block bg-transparent"></canvas>
       
       <!-- Interactive UI Layer -->
-      <div id="game-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-white/95 dark:bg-black/95 backdrop-blur-sm z-10 transition-opacity duration-300">
+      <div id="game-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-black z-10 transition-opacity duration-300">
         <h3 id="game-msg" class="text-xl font-black uppercase tracking-wider text-black dark:text-white mb-4 text-center px-4 leading-snug">
           Snake<br/>
-          <span class="text-xs font-medium tracking-normal text-gray-500">Classic Theme</span>
+          <span class="text-xs font-black tracking-widest uppercase opacity-40">Classic Theme</span>
         </h3>
-        <button id="start-btn" class="px-5 py-2 border-2 border-black dark:border-white text-xs font-bold tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
+        <button id="start-btn" class="px-5 py-2 border-2 border-black dark:border-white text-xs font-black tracking-widest uppercase rounded-none text-white dark:text-black bg-black dark:bg-white hover:bg-transparent dark:hover:bg-transparent hover:text-black dark:hover:text-white transition-all duration-200 cursor-pointer">
           Play Game
         </button>
       </div>
     </div>
 
     <!-- Scaled Down CTA -->
-    <a href="/" class="inline-flex justify-center items-center px-6 py-3 border-2 border-black dark:border-white text-xs font-bold tracking-widest uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300">
+    <a href="/" class="inline-flex justify-center items-center px-8 py-3 border-2 border-black dark:border-white text-xs font-black tracking-[0.2em] uppercase rounded-none text-black dark:text-white bg-transparent hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300">
       &larr; Return Home
     </a>
 

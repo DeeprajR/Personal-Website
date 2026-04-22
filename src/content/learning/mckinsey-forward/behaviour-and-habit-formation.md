@@ -2,8 +2,7 @@
 title: "Behaviours and Habit Formation"
 hook: "You can change your behaviour and create habits. Read this article to learn more how to."
 date: 2026-03-25
-tags: ["Learnings"]
-categories: ["Adaptability and Resilience"]
+tags: ["Habits", "Behaviour"]
 ---
 
 Healthy learning behaviours are the building blocks of habits. When you are able to understand your good and bad behaviours, you will be able to give more focus on having more good behaviours. 
@@ -44,4 +43,3 @@ Understanding your good and bad behaviours plays crucial step in habit formation
 2. **Craving**: The motivational force that drives the behavior. Keep in mind that cravings are appealing and desirable.
 3. **Response**: It is the actual behavior or action you take. Make it simple and effortless.
 4. **Reward**: The positive reinforcement that tells your brain this loop is worth remembering for the future. Ensure it is enjoyable and reinforcing.
-

@@ -5,6 +5,7 @@ import path from 'path';
 
 const PUBLIC_DIR = 'public';
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'tiff', 'gif'];
+const CACHE_FILE = '.exif-cache.json';
 
 async function stripExif() {
   console.log('🚀 Starting site-wide EXIF stripping...');
@@ -14,33 +15,42 @@ async function stripExif() {
 
   console.log(`📸 Found ${files.length} images to process.`);
 
+  let cache = {};
+  try {
+    const cacheData = await fs.readFile(CACHE_FILE, 'utf-8');
+    cache = JSON.parse(cacheData);
+  } catch (err) {
+    // No cache exists yet
+  }
+
   let processedCount = 0;
   let skippedCount = 0;
   let errorCount = 0;
 
   for (const file of files) {
     try {
+      const stats = await fs.stat(file);
+      
+      if (cache[file] && cache[file] === stats.mtimeMs) {
+        skippedCount++;
+        continue;
+      }
+
       const buffer = await fs.readFile(file);
-      
-      // We use sharp to read the image and write it back without metadata.
-      // .withMetadata() without arguments would keep it, but by default sharp strips it.
-      // However, to be explicit, we just process and save.
-      
       const image = sharp(buffer);
-      const metadata = await image.metadata();
-      
-      // If the image has no profile/exif, we might be able to skip it, 
-      // but re-saving is the safest way to ensure clean output.
       
       await image
-        .rotate() // Auto-rotate based on EXIF before stripping it
+        .rotate()
         .toFile(file + '.tmp');
       
       await fs.rename(file + '.tmp', file);
       
+      const newStats = await fs.stat(file);
+      cache[file] = newStats.mtimeMs;
+      
       processedCount++;
       if (processedCount % 10 === 0) {
-        console.log(`- Processed ${processedCount}/${files.length}...`);
+        console.log(`- Processed ${processedCount}...`);
       }
     } catch (err) {
       console.error(`❌ Error processing ${file}:`, err.message);
@@ -48,9 +58,12 @@ async function stripExif() {
     }
   }
 
+  await fs.writeFile(CACHE_FILE, JSON.stringify(cache, null, 2));
+
   console.log('\n✅ EXIF Stripping Complete:');
   console.log(`- Total: ${files.length}`);
   console.log(`- Processed: ${processedCount}`);
+  console.log(`- Skipped (Cached): ${skippedCount}`);
   console.log(`- Errors: ${errorCount}`);
 }
 

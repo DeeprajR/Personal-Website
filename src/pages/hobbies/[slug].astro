@@ -18,29 +18,29 @@ const { Content } = await render(entry);
   <article class="max-w-3xl mx-auto px-6 py-24 md:py-32">
     
     <div class="mb-16 text-center">
-      <a href="/hobbies" class="text-sm font-bold tracking-widest uppercase text-gray-400 hover:text-black dark:hover:text-white mb-12 inline-block transition-colors">&larr; Back to Hobbies</a>
+      <a href="/hobbies" class="text-xs font-black tracking-widest uppercase text-black dark:text-white opacity-40 hover:opacity-100 mb-12 inline-block transition-all underline underline-offset-4 decoration-2">&larr; Back to Hobbies</a>
       
-      <div class="mb-6 flex justify-center gap-3">
+      <div class="mb-8 flex justify-center gap-3">
         {entry.data.categories?.map((cat: string) => (
-          <span class="text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest bg-gray-100 dark:bg-gray-800 px-3 py-1">{cat}</span>
+          <span class="text-[10px] font-black text-black dark:text-white uppercase tracking-widest border-2 border-black dark:border-white px-3 py-1">{cat}</span>
         ))}
       </div>
 
-      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 mb-6 leading-tight max-w-2xl mx-auto">
+      <h1 class="text-4xl md:text-6xl font-black tracking-tighter text-black dark:text-white mb-8 leading-none max-w-2xl mx-auto uppercase">
         {entry.data.title}
       </h1>
       
-      <p class="text-lg md:text-xl text-gray-500 dark:text-gray-300 font-medium max-w-2xl mx-auto">
+      <p class="text-lg md:text-2xl text-black dark:text-white font-black max-w-2xl mx-auto opacity-70 leading-tight">
         {entry.data.hook}
       </p>
       
-      <div class="mt-10 text-sm font-mono text-gray-400 dark:text-gray-500">
+      <div class="mt-12 text-xs font-black uppercase tracking-[0.2em] text-black dark:text-white opacity-40">
         {entry.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
       </div>
     </div>
 
     {entry.data.bannerImage && (
-      <div class="mb-16 -mx-6 md:-mx-12 rounded-none md:rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800">
+      <div class="mb-20 -mx-6 md:-mx-12 border-2 border-black dark:border-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] overflow-hidden bg-white dark:bg-black">
         <img 
           src={entry.data.bannerImage} 
           alt={`Banner for ${entry.data.title}`} 
@@ -49,48 +49,36 @@ const { Content } = await render(entry);
       </div>
     )}
 
-    <div class="content-wrapper prose prose-gray max-w-none mx-auto">
+    <div class="content-wrapper prose dark:prose-invert max-w-none mx-auto">
       <style is:global>
         @reference "tailwindcss";
-        .content-wrapper h3 {
-          @apply text-2xl font-bold text-gray-900 mt-16 mb-6 tracking-tight;
+        .content-wrapper :where(h3) {
+          @apply text-2xl font-black mt-16 mb-6 tracking-tighter uppercase border-b-2 border-black dark:border-white pb-2;
         }
-        .dark .content-wrapper h3 {
-          @apply text-gray-100;
+        .content-wrapper :where(p) {
+          @apply text-lg leading-relaxed mb-8 font-bold;
         }
-        .content-wrapper p {
-          @apply text-lg text-gray-700 leading-relaxed mb-8;
+        .content-wrapper :where(img) {
+          @apply border-2 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] mb-12 w-full h-auto grayscale transition-all duration-700 hover:grayscale-0;
         }
-        .dark .content-wrapper p {
-          @apply text-gray-300;
+        .content-wrapper :where(ul) {
+          @apply list-disc list-outside ml-5 mb-8 space-y-3 text-lg font-bold;
         }
-        .content-wrapper img {
-          @apply rounded-xl shadow-sm mb-8 w-full h-auto grayscale transition-all duration-700 hover:grayscale-0;
-        }
-        .content-wrapper ul {
-          @apply list-disc list-outside ml-5 mb-8 space-y-3 text-lg text-gray-700;
-        }
-        .dark .content-wrapper ul {
-          @apply text-gray-300;
-        }
-        .content-wrapper li {
+        .content-wrapper :where(li) {
           @apply pl-2;
         }
-        .content-wrapper strong {
-          @apply font-bold text-black;
-        }
-        .dark .content-wrapper strong {
-          @apply text-white;
+        .content-wrapper :where(strong) {
+          @apply font-black;
         }
       </style>
       <Content />
     </div>
 
     {entry.data.tags && (
-      <div class="mt-20 pt-8 border-t border-gray-100 dark:border-gray-800">
+      <div class="mt-20 pt-10 border-t-2 border-black dark:border-white">
         <div class="flex flex-wrap gap-2">
           {entry.data.tags.map((tag: string) => (
-            <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest border border-gray-200 dark:border-gray-800 px-3 py-1">{tag}</span>
+            <span class="text-[10px] font-black text-black dark:text-white uppercase tracking-widest border-2 border-black dark:border-white px-3 py-1">{tag}</span>
           ))}
         </div>
       </div>

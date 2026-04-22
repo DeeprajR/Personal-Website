@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { learningTopics, getTopicById } from '../../../data/learningTopics';
+
+export async function getStaticPaths() {
+  const allLearning = await getCollection('learning');
+
+  // Build paths for each topic that has entries or is registered
+  const topicIds = new Set<string>();
+
+  // Add topics from entries
+  allLearning.forEach(entry => {
+    const parts = entry.id.split('/');
+    if (parts.length > 1) topicIds.add(parts[0]);
+  });
+
+  // Add registered topics
+  learningTopics.forEach(t => topicIds.add(t.id));
+
+  return Array.from(topicIds).map(topicId => ({
+    params: { topic: topicId },
+    props: {
+      topicId,
+      entries: allLearning
+        .filter(e => e.id.startsWith(topicId + '/'))
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+    },
+  }));
+}
+
+const { topicId, entries } = Astro.props;
+const topic = getTopicById(topicId);
+const topicName = topic?.name || topicId;
+const topicDescription = topic?.description || '';
+const isActive = topic?.status === 'active';
+---
+
+<BaseLayout title={`${topicName} | Learning Journal | Deepraj R`} description={topicDescription}>
+  <div class="max-w-3xl mx-auto px-6 py-24 md:py-32">
+
+    <!-- Breadcrumb -->
+    <nav class="mb-12">
+      <a href="/learning" class="text-xs font-black tracking-widest uppercase text-black dark:text-white hover:underline hover:opacity-100 transition-all underline-offset-4 decoration-2">
+        &larr; Learning Journal
+      </a>
+    </nav>
+
+    <!-- Topic Header -->
+    <header class="mb-16 pb-12 border-b-2 border-black dark:border-white">
+      <div class="flex items-center gap-3 mb-6">
+          {isActive ? (
+            <span class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-white dark:text-black bg-emerald-500 border-2 border-black dark:border-white px-3 py-1">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+              </span>
+              Active
+            </span>
+          ) : (
+            <span class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white border-2 border-black dark:border-white px-3 py-1">
+              Planned
+            </span>
+          )}
+      </div>
+      <h1 class="text-3xl md:text-5xl font-black tracking-tighter text-black dark:text-white mb-6 uppercase">
+        {topicName}
+      </h1>
+      {topicDescription && (
+        <p class="text-lg text-black dark:text-white font-bold max-w-2xl leading-relaxed">
+          {topicDescription}
+        </p>
+      )}
+      <div class="mt-8 text-xs font-black uppercase tracking-[0.2em] text-black dark:text-white">
+        {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
+      </div>
+    </header>
+
+    <!-- Journal Timeline -->
+    {entries.length > 0 ? (
+      <div class="relative">
+        {/* Vertical timeline line */}
+        <div class="absolute left-[7px] top-3 bottom-0 w-1 bg-black dark:bg-white opacity-10"></div>
+
+        <div class="space-y-8">
+          {entries.map((entry, i) => {
+            const slug = entry.id.split('/').slice(1).join('/');
+            return (
+              <a
+                href={`/learning/${topicId}/${slug}`}
+                class="group relative block pl-12 py-10 text-black dark:text-white bg-white dark:bg-black hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border-2 border-black dark:border-white transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,1)]"
+              >
+                {/* Timeline dot */}
+                <div class="absolute -left-1.5 top-12 w-4 h-4 border-2 border-black dark:border-white bg-white dark:bg-black group-hover:bg-black dark:group-hover:bg-white transition-colors z-10"></div>
+
+                {/* Date */}
+                <div class="text-[10px] font-black uppercase tracking-widest mb-4 group-hover:opacity-100 transition-all">
+                  {entry.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                </div>
+
+                {/* Title */}
+                <h3 class="text-2xl font-black tracking-tighter mb-4 uppercase leading-none transition-all">
+                  {entry.data.title}
+                </h3>
+
+                {/* Hook */}
+                {entry.data.hook && (
+                  <p class="font-bold leading-relaxed line-clamp-3 group-hover:opacity-100 transition-all">
+                    {entry.data.hook}
+                  </p>
+                )}
+
+                {/* Tags */}
+                {entry.data.tags && entry.data.tags.length > 0 && (
+                  <div class="mt-6 flex flex-wrap gap-2">
+                    {entry.data.tags.map(tag => (
+                      <span class="text-[10px] font-black uppercase tracking-widest border-2 border-black dark:border-white group-hover:border-white dark:group-hover:border-black px-2 py-0.5 transition-all">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    ) : (
+      <div class="text-center py-24 border-2 border-dashed border-black dark:border-white">
+        <p class="text-lg font-black text-black dark:text-white uppercase tracking-widest mb-2">No entries yet</p>
+        <p class="text-sm font-bold text-black dark:text-white uppercase tracking-tight">This topic is in the pipeline. Entries will appear here as I start learning.</p>
+      </div>
+    )}
+
+  </div>
+</BaseLayout>

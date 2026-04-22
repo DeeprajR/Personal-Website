@@ -50,9 +50,8 @@ function sanitizeId(id) {
 }
 ---
 
-<div class="network-wrapper relative w-full h-[600px] md:h-[700px] border-y-2 md:border-2 border-black dark:border-white bg-brand-gray-50 dark:bg-brand-gray-900 overflow-hidden">
-  <div class="absolute inset-0 z-0 pointer-events-none" style="background-image: radial-gradient(var(--tw-colors-gray-300) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.2;"></div>
-  <div class="absolute inset-0 z-0 pointer-events-none dark:block hidden" style="background-image: radial-gradient(var(--tw-colors-gray-600) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.2;"></div>
+<div class="network-wrapper relative w-full h-[600px] md:h-[700px] border-y-2 md:border-2 border-black dark:border-white bg-white dark:bg-black overflow-hidden">
+  <div class="absolute inset-0 z-0 pointer-events-none" style="background-image: radial-gradient(var(--tw-colors-black) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.1;"></div>
   
   <!-- Server-rendered data carrier -->
   <div id="network-data" class="hidden" data-payload={precomputedDataStr}></div>
@@ -67,21 +66,21 @@ function sanitizeId(id) {
     </defs>
   </svg>
   
-  <div id="network-tooltip" class="absolute z-50 pointer-events-auto opacity-0 bg-white dark:bg-black border-2 border-black dark:border-white p-4 shadow-[4px_4px_0_0_rgba(0,0,0,1)] dark:shadow-[4px_4px_0_0_rgba(255,255,255,1)] transition-opacity duration-150 rounded-none w-64" style="left:0; top:0; visibility: hidden;">
-     <div class="flex justify-between items-start mb-2">
+  <div id="network-tooltip" class="absolute z-50 pointer-events-auto opacity-0 bg-white dark:bg-black border-2 border-black dark:border-white p-6 shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:shadow-[8px_8px_0_0_rgba(255,255,255,1)] transition-opacity duration-150 rounded-none w-72" style="left:0; top:0; visibility: hidden;">
+     <div class="flex justify-between items-start mb-4">
        <div>
-         <div class="text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400" id="tooltip-group"></div>
-         <div class="text-xl font-extrabold text-black dark:text-white leading-tight" id="tooltip-name"></div>
+         <div class="text-[10px] font-black uppercase tracking-widest text-black dark:text-white opacity-40 mb-1" id="tooltip-group"></div>
+         <div class="text-2xl font-black text-black dark:text-white tracking-tighter uppercase leading-none" id="tooltip-name"></div>
        </div>
-       <button id="close-tooltip" class="hidden text-gray-400 hover:text-black dark:hover:text-white font-bold text-xl leading-none px-1" aria-label="Close">&times;</button>
+       <button id="close-tooltip" class="hidden text-black dark:text-white opacity-40 hover:opacity-100 font-black text-2xl leading-none px-1" aria-label="Close">&times;</button>
      </div>
      
-     <div id="tooltip-job" class="text-sm font-bold text-gray-800 dark:text-gray-200"></div>
-     <div id="tooltip-org" class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3"></div>
+     <div id="tooltip-job" class="text-sm font-black text-black dark:text-white uppercase tracking-tight"></div>
+     <div id="tooltip-org" class="text-xs font-bold text-black dark:text-white opacity-40 uppercase tracking-widest mb-4"></div>
      
-     <div id="tooltip-links" class="flex gap-4 border-t-2 border-gray-100 dark:border-gray-800 pt-3 mt-1 hidden">
-        <a id="link-linkedin" href="#" target="_blank" class="text-xs font-bold uppercase tracking-widest hover:underline decoration-2 hidden text-blue-600 dark:text-blue-400">LinkedIn</a>
-        <a id="link-website" href="#" target="_blank" class="text-xs font-bold uppercase tracking-widest hover:underline decoration-2 hidden text-black dark:text-white">Website</a>
+     <div id="tooltip-links" class="flex gap-4 border-t-2 border-black dark:border-white pt-4 mt-2 hidden">
+        <a id="link-linkedin" href="#" target="_blank" class="text-[10px] font-black uppercase tracking-widest hover:underline decoration-2 hidden text-black dark:text-white">LinkedIn</a>
+        <a id="link-website" href="#" target="_blank" class="text-[10px] font-black uppercase tracking-widest hover:underline decoration-2 hidden text-black dark:text-white">Website</a>
      </div>
   </div>
 </div>
@@ -134,8 +133,8 @@ function sanitizeId(id) {
       .selectAll('line')
       .data(links)
       .join('line')
-      .attr('class', 'stroke-gray-300 dark:stroke-gray-700')
-      .attr('stroke-width', 2);
+      .attr('class', 'stroke-black dark:stroke-white opacity-10')
+      .attr('stroke-width', 1.5);
 
     const node = g.append('g')
       .selectAll('circle')
@@ -144,19 +143,17 @@ function sanitizeId(id) {
       .attr('r', d => d.radius)
       // Visual group styling
       .attr('class', d => {
-        let baseClass = 'stroke-black dark:stroke-white stroke-2 cursor-pointer';
+        let baseClass = 'stroke-black dark:stroke-white stroke-2 cursor-pointer transition-all duration-300';
         
         if (!d.image) {
           if (d.group === 0) baseClass += ' fill-black dark:fill-white';
-          else if (d.group === 2 || d.group === 1) baseClass += ' fill-white dark:fill-brand-gray-900';
-          else if (d.group === 3) baseClass += ' fill-gray-200 dark:fill-gray-800';
-          else if (d.group === 4) baseClass += ' fill-gray-100 dark:fill-gray-950';
-          else baseClass += ' fill-white dark:fill-brand-gray-900';
+          else if (d.group === 2 || d.group === 1) baseClass += ' fill-white dark:fill-black';
+          else baseClass += ' fill-white dark:fill-black';
         }
         return baseClass;
       })
       .attr('fill', d => d.image ? `url(#img-${d.id.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()})` : null)
-      .attr('stroke-dasharray', d => d.group === 2 ? '4,4' : d.group === 4 ? '1,4' : 'none')
+      .attr('stroke-dasharray', d => d.group === 2 ? '6,4' : d.group === 4 ? '2,6' : 'none')
       .call(drag(simulation));
 
     const labels = g.append('g')
@@ -164,10 +161,10 @@ function sanitizeId(id) {
       .data(nodes)
       .join('text')
       .text(d => d.id)
-      .attr('font-size', d => d.group === 0 ? '14px' : '12px')
-      .attr('class', d => d.group === 0 ? 'fill-black dark:fill-white font-bold pointer-events-none' : 'fill-gray-700 dark:fill-gray-300 font-bold pointer-events-none')
+      .attr('font-size', d => d.group === 0 ? '14px' : '11px')
+      .attr('class', d => 'fill-black dark:fill-white font-black uppercase tracking-wider pointer-events-none opacity-40')
       .attr('text-anchor', 'middle')
-      .attr('dy', d => d.radius + 16);
+      .attr('dy', d => d.radius + 18);
 
     // Initial Manual Layout Update based on pre-computed values
     function updateDOM() {
@@ -237,15 +234,15 @@ function sanitizeId(id) {
     }
 
     function highlightNode(d) {
-      node.attr('opacity', n => n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id)) ? 1 : 0.2);
-      labels.attr('opacity', n => n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id)) ? 1 : 0.2);
-      link.attr('class', l => l.source.id === d.id || l.target.id === d.id ? 'stroke-black dark:stroke-white' : 'stroke-gray-200 dark:stroke-gray-800 opacity-30').attr('stroke-width', l => l.source.id === d.id || l.target.id === d.id ? 3 : 1);
+      node.attr('opacity', n => n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id)) ? 1 : 0.1);
+      labels.attr('opacity', n => n.id === d.id || links.some(l => (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id)) ? 1 : 0.1);
+      link.attr('class', l => l.source.id === d.id || l.target.id === d.id ? 'stroke-black dark:stroke-white opacity-100' : 'stroke-black dark:stroke-white opacity-5').attr('stroke-width', l => l.source.id === d.id || l.target.id === d.id ? 2 : 1);
     }
 
     function resetHighlight() {
       node.attr('opacity', 1);
-      labels.attr('opacity', 1);
-      link.attr('class', 'stroke-gray-300 dark:stroke-gray-700').attr('stroke-width', 2);
+      labels.attr('opacity', n => n.group === 0 ? 1 : 0.4);
+      link.attr('class', 'stroke-black dark:stroke-white opacity-10').attr('stroke-width', 1.5);
     }
 
     function hideTooltip() {
